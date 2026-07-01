@@ -4,6 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SOUDSADA SHOP</title>
+
+  <!-- PWA Manifest — controls the icon/name shown when "Added to Home Screen" -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#339972" />
+
+  <!-- Favicon / Home Screen icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Soudsada" />
+
+  <!-- Open Graph / Link Preview -->
+  <meta property="og:title" content="SOUDSADA SHOP" />
+  <meta property="og:description" content="ລະບົບຂາຍ ແລະ ຈັດການສະຕ໋ອກ Soudsada Shop" />
+  <meta property="og:image" content="icons/icon-512.png" />
+  <meta property="og:type" content="website" />
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="config.js"></script>
   <style>
@@ -11,13 +30,13 @@
        CSS VARIABLES & BASE
     ═══════════════════════════════════ */
     :root {
-      --primary: #339972;
-      --primary-rgb: 51,153,114;
+      --primary: #F33A6A;
+      --primary-rgb: 243,58,106;
       --secondary: #2ecc71;
       --danger: #e74c3c;
       --warning: #f39c12;
       --blue: #3498db;
-      --bg: #f5f6fa;
+      --bg: #FAA0A0;
       --card-bg: #ffffff;
       --text: #333;
       --text-sub: #888;
@@ -65,29 +84,35 @@
     input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none;}
     textarea{resize:none;}
 
-    .btn{background:var(--primary);color:white;border:none;padding:10px;width:100%;border-radius:var(--radius-sm);font-weight:bold;cursor:pointer;font-size:13px;transition:opacity .15s,transform .1s;}
-    .btn:active{opacity:.85;transform:scale(.98);}
-    .btn-sec{background:var(--secondary);}
-    .btn-blue{background:var(--blue);}
-    .btn-gray{background:#888;}
-    .btn-dang{background:var(--danger);}
-    .btn-warn{background:var(--warning);}
+    .btn{background:var(--primary);color:white;border:none;padding:10px;width:100%;border-radius:var(--radius-sm);font-weight:bold;cursor:pointer;font-size:13px;
+      box-shadow:0 4px 0 rgba(0,0,0,.14), 0 6px 16px rgba(var(--primary-rgb),.35);
+      transition:transform .14s cubic-bezier(.34,1.56,.64,1), box-shadow .14s ease, opacity .15s ease;}
+    .btn:active{opacity:.95;transform:translateY(3px) scale(.97);box-shadow:0 1px 0 rgba(0,0,0,.14), 0 2px 8px rgba(var(--primary-rgb),.28);}
+    .btn-sec{background:var(--secondary);box-shadow:0 4px 0 rgba(0,0,0,.14), 0 6px 16px rgba(46,204,113,.35);}
+    .btn-blue{background:var(--blue);box-shadow:0 4px 0 rgba(0,0,0,.14), 0 6px 16px rgba(52,152,219,.35);}
+    .btn-gray{background:#888;box-shadow:0 4px 0 rgba(0,0,0,.14), 0 6px 16px rgba(0,0,0,.2);}
+    .btn-dang{background:var(--danger);box-shadow:0 4px 0 rgba(0,0,0,.14), 0 6px 16px rgba(231,76,60,.35);}
+    .btn-warn{background:var(--warning);box-shadow:0 4px 0 rgba(0,0,0,.14), 0 6px 16px rgba(243,156,18,.35);}
 
     /* NAV */
     .nav{position:fixed;bottom:0;width:100%;background:var(--nav-bg);display:flex;border-top:1px solid var(--nav-border);height:var(--nav-h);z-index:1000;}
-    .nav-item{flex:1;text-align:center;color:#aaa;cursor:pointer;font-size:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:color .2s;}
+    .nav-item{flex:1;text-align:center;color:#aaa;cursor:pointer;font-size:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      transition:color .2s, transform .14s cubic-bezier(.34,1.56,.64,1);}
+    .nav-item:active{transform:scale(.88);}
     .nav-item div{font-size:19px;}
     .active-nav{color:var(--primary);font-weight:bold;}
 
     .action-btns{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;}
-    .btn-act{border:none;border-radius:4px;padding:5px 8px;color:white;font-size:11px;cursor:pointer;white-space:nowrap;}
+    .btn-act{border:none;border-radius:4px;padding:5px 8px;color:white;font-size:11px;cursor:pointer;white-space:nowrap;
+      box-shadow:0 2px 0 rgba(0,0,0,.15);transition:transform .14s cubic-bezier(.34,1.56,.64,1), box-shadow .14s ease;}
+    .btn-act:active{transform:translateY(2px) scale(.95);box-shadow:0 0 0 rgba(0,0,0,.15);}
     .bg-warn{background:var(--warning);}
     .bg-dang{background:var(--danger);}
     .bg-succ{background:var(--secondary);}
     .bg-blue{background:var(--blue);}
 
     /* BANNER */
-    .banner-wrap{position:relative;width:100%;height:200px;overflow:hidden;background:linear-gradient(135deg,#1a4a35,#339972);border-radius:0 0 var(--radius-lg) var(--radius-lg);box-shadow:0 4px 16px rgba(0,0,0,.15);}
+    .banner-wrap{position:relative;width:100%;height:200px;overflow:hidden;background:linear-gradient(135deg,#7a1030,#F33A6A);border-radius:0 0 var(--radius-lg) var(--radius-lg);box-shadow:0 4px 16px rgba(0,0,0,.15);}
     .banner-slides{display:flex;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,0,.2,1);}
     .banner-slide{min-width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;}
     .banner-slide-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.45),rgba(0,0,0,.15));z-index:1;}
@@ -102,12 +127,12 @@
     .banner-arrows{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 8px;z-index:5;pointer-events:none;}
     .banner-arrow{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);color:white;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:all;transition:background .2s;backdrop-filter:blur(4px);}
     .banner-arrow:hover{background:rgba(255,255,255,.38);}
-    .banner-placeholder{width:100%;height:200px;background:linear-gradient(135deg,#1a4a35,#1a6644);display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.6);font-size:13px;gap:8px;}
+    .banner-placeholder{width:100%;height:200px;background:linear-gradient(135deg,#7a1030,#c72957);display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.6);font-size:13px;gap:8px;}
     .banner-loading-spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.8);border-radius:50%;animation:spin .8s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg)}}
 
     /* TICKER */
-    .ticker-wrap{width:100%;background:linear-gradient(90deg,#1a4a35,#339972 40%,#1a4a35);overflow:hidden;height:36px;display:flex;align-items:center;}
+    .ticker-wrap{width:100%;background:linear-gradient(90deg,#7a1030,#F33A6A 40%,#7a1030);overflow:hidden;height:36px;display:flex;align-items:center;}
     .ticker-label{flex-shrink:0;background:rgba(255,255,255,.18);color:white;font-size:11px;font-weight:700;padding:0 10px;height:100%;display:flex;align-items:center;border-right:1px solid rgba(255,255,255,.25);white-space:nowrap;}
     .ticker-body{flex:1;overflow:hidden;position:relative;height:100%;}
     .ticker-inner{display:flex;align-items:center;height:100%;position:absolute;white-space:nowrap;animation:tickerScroll 30s linear infinite;}
@@ -246,8 +271,10 @@
     .set-row input[type=color]{width:42px;height:36px;padding:3px;border-radius:5px;cursor:pointer;flex:none;margin:0;border:1px solid var(--border);}
     .logo-preview{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);display:block;margin:0 auto 10px;}
     .color-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;}
-    .color-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border-color .2s,transform .1s;}
+    .color-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;
+      transition:border-color .2s, transform .14s cubic-bezier(.34,1.56,.64,1);}
     .color-swatch:hover,.color-swatch.active{border-color:#333;transform:scale(1.1);}
+    .color-swatch:active{transform:scale(.85);}
     .toggle-wrap{display:flex;align-items:center;gap:7px;}
     .toggle{position:relative;width:42px;height:23px;flex-shrink:0;}
     .toggle input{opacity:0;width:0;height:0;}
@@ -255,7 +282,9 @@
     .slider::before{content:'';position:absolute;width:17px;height:17px;bottom:3px;left:3px;background:white;border-radius:50%;transition:.3s;}
     input:checked+.slider{background:var(--primary);}
     input:checked+.slider::before{transform:translateX(19px);}
-    .grid-opt{padding:5px 12px;border-radius:20px;font-size:12px;border:1.5px solid var(--border);cursor:pointer;background:var(--card-bg);color:var(--text);transition:all .2s;}
+    .grid-opt{padding:5px 12px;border-radius:20px;font-size:12px;border:1.5px solid var(--border);cursor:pointer;background:var(--card-bg);color:var(--text);
+      transition:all .2s, transform .14s cubic-bezier(.34,1.56,.64,1);}
+    .grid-opt:active{transform:scale(.9);}
     .grid-opt.active{background:var(--primary);color:white;border-color:var(--primary);}
     .social-edit-row{display:flex;gap:6px;align-items:center;margin-bottom:7px;}
     .social-icon-lbl{font-size:18px;width:30px;flex-shrink:0;text-align:center;}
@@ -275,7 +304,9 @@
     .top5-pname{font-size:14px;font-weight:bold;margin-bottom:3px;}
     .top5-qty{font-size:11px;color:#888;}
     .top5-nav{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
-    .top5-nav button{background:var(--primary);color:white;border:none;border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;font-weight:bold;}
+    .top5-nav button{background:var(--primary);color:white;border:none;border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;font-weight:bold;
+      box-shadow:0 3px 0 rgba(0,0,0,.15);transition:transform .14s cubic-bezier(.34,1.56,.64,1), box-shadow .14s ease;}
+    .top5-nav button:active{transform:translateY(2px) scale(.95);box-shadow:0 0 0 rgba(0,0,0,.15);}
     .top5-dots{display:flex;gap:5px;}
     .top5-dot{width:7px;height:7px;border-radius:50%;background:#ddd;cursor:pointer;transition:background .2s;}
     .top5-dot.active{background:var(--primary);}
@@ -290,7 +321,9 @@
     .modal-title{font-size:15px;font-weight:bold;color:var(--primary);}
     .close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;}
     .modal-tabs{display:flex;gap:5px;margin-bottom:12px;}
-    .m-tab{flex:1;padding:8px;border:none;border-radius:7px;font-size:12px;font-weight:bold;cursor:pointer;background:#eee;color:#333;transition:all .2s;}
+    .m-tab{flex:1;padding:8px;border:none;border-radius:7px;font-size:12px;font-weight:bold;cursor:pointer;background:#eee;color:#333;
+      transition:all .2s, transform .14s cubic-bezier(.34,1.56,.64,1);}
+    .m-tab:active{transform:scale(.93);}
     .m-tab.active-tab{background:var(--primary);color:white;}
 
     .empty-state{text-align:center;color:#aaa;padding:20px;font-size:12px;}
@@ -571,9 +604,10 @@
     </div>
     <div class="settings-section">
       <h4>🎨 ໂທນສີ</h4>
-      <div class="set-row"><label>ສີຫຼັກ</label><input type="color" id="set-primary" value="#339972" onchange="applyPrimary(this.value)"><span id="set-primary-hex" style="font-size:12px;color:var(--text-sub);margin-left:6px">#339972</span></div>
+      <div class="set-row"><label>ສີຫຼັກ</label><input type="color" id="set-primary" value="#F33A6A" onchange="applyPrimary(this.value)"><span id="set-primary-hex" style="font-size:12px;color:var(--text-sub);margin-left:6px">#F33A6A</span></div>
       <div class="color-presets">
-        <div class="color-swatch active" style="background:#339972" onclick="setColorPreset('#339972',this)"></div>
+        <div class="color-swatch active" style="background:#F33A6A" onclick="setColorPreset('#F33A6A',this)"></div>
+        <div class="color-swatch" style="background:#339972" onclick="setColorPreset('#339972',this)"></div>
         <div class="color-swatch" style="background:#FF7F50" onclick="setColorPreset('#FF7F50',this)"></div>
         <div class="color-swatch" style="background:#e74c3c" onclick="setColorPreset('#e74c3c',this)"></div>
         <div class="color-swatch" style="background:#9b59b6" onclick="setColorPreset('#9b59b6',this)"></div>
@@ -588,7 +622,7 @@
     <div class="settings-section">
       <h4>🔤 ຂະໜາດ & ຮູບແບບ</h4>
       <div class="set-row"><label>ຕົວໜັງສື (px)</label><input type="number" id="set-fontsize" value="14" min="11" max="20" onchange="applyFontSize(this.value)"></div>
-      <div class="set-row"><label>Header ສີ</label><input type="color" id="set-header-bg" value="#339972" onchange="document.getElementById('app-header').style.background=this.value"></div>
+      <div class="set-row"><label>Header ສີ</label><input type="color" id="set-header-bg" value="#F33A6A" onchange="document.getElementById('app-header').style.background=this.value"></div>
       <div class="set-row"><label>Radius (px)</label><input type="number" id="set-radius" value="14" min="0" max="30" onchange="applyRadius(this.value)"></div>
     </div>
     <div class="settings-section">
