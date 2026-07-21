@@ -30,13 +30,13 @@
        CSS VARIABLES & BASE
     ═══════════════════════════════════ */
     :root {
-      --primary: #F33A6A;
-      --primary-rgb: 243,58,106;
-      --secondary: #2ecc71;
-      --danger: #e74c3c;
-      --warning: #f39c12;
-      --blue: #3498db;
-      --bg: #FAA0A0;
+      --primary: #5FAE82;
+      --primary-rgb: 95,174,130;
+      --secondary: #8FD9B3;
+      --danger: #4A7C59;
+      --warning: #A9C46C;
+      --blue: #6FB8A8;
+      --bg: #E8F5EC;
       --card-bg: #ffffff;
       --text: #333;
       --text-sub: #888;
@@ -112,7 +112,7 @@
     .bg-blue{background:var(--blue);}
 
     /* BANNER */
-    .banner-wrap{position:relative;width:100%;height:200px;overflow:hidden;background:linear-gradient(135deg,#7a1030,#F33A6A);border-radius:0 0 var(--radius-lg) var(--radius-lg);box-shadow:0 4px 16px rgba(0,0,0,.15);}
+    .banner-wrap{position:relative;width:100%;height:200px;overflow:hidden;background:linear-gradient(135deg,#2E5B41,#5FAE82);border-radius:0 0 var(--radius-lg) var(--radius-lg);box-shadow:0 4px 16px rgba(0,0,0,.15);}
     .banner-slides{display:flex;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,0,.2,1);}
     .banner-slide{min-width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;}
     .banner-slide-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.45),rgba(0,0,0,.15));z-index:1;}
@@ -127,12 +127,12 @@
     .banner-arrows{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 8px;z-index:5;pointer-events:none;}
     .banner-arrow{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);color:white;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:all;transition:background .2s;backdrop-filter:blur(4px);}
     .banner-arrow:hover{background:rgba(255,255,255,.38);}
-    .banner-placeholder{width:100%;height:200px;background:linear-gradient(135deg,#7a1030,#c72957);display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.6);font-size:13px;gap:8px;}
+    .banner-placeholder{width:100%;height:200px;background:linear-gradient(135deg,#2E5B41,#4C9670);display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.6);font-size:13px;gap:8px;}
     .banner-loading-spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.8);border-radius:50%;animation:spin .8s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg)}}
 
     /* TICKER */
-    .ticker-wrap{width:100%;background:linear-gradient(90deg,#7a1030,#F33A6A 40%,#7a1030);overflow:hidden;height:36px;display:flex;align-items:center;}
+    .ticker-wrap{width:100%;background:linear-gradient(90deg,#2E5B41,#5FAE82 40%,#2E5B41);overflow:hidden;height:36px;display:flex;align-items:center;}
     .ticker-label{flex-shrink:0;background:rgba(255,255,255,.18);color:white;font-size:11px;font-weight:700;padding:0 10px;height:100%;display:flex;align-items:center;border-right:1px solid rgba(255,255,255,.25);white-space:nowrap;}
     .ticker-body{flex:1;overflow:hidden;position:relative;height:100%;}
     .ticker-inner{display:flex;align-items:center;height:100%;position:absolute;white-space:nowrap;animation:tickerScroll 30s linear infinite;}
@@ -604,25 +604,25 @@
     </div>
     <div class="settings-section">
       <h4>🎨 ໂທນສີ</h4>
-      <div class="set-row"><label>ສີຫຼັກ</label><input type="color" id="set-primary" value="#F33A6A" onchange="applyPrimary(this.value)"><span id="set-primary-hex" style="font-size:12px;color:var(--text-sub);margin-left:6px">#F33A6A</span></div>
+      <div class="set-row"><label>ສີຫຼັກ</label><input type="color" id="set-primary" value="#5FAE82" onchange="applyPrimary(this.value)"><span id="set-primary-hex" style="font-size:12px;color:var(--text-sub);margin-left:6px">#5FAE82</span></div>
       <div class="color-presets">
-        <div class="color-swatch active" style="background:#F33A6A" onclick="setColorPreset('#F33A6A',this)"></div>
+        <div class="color-swatch active" style="background:#5FAE82" onclick="setColorPreset('#5FAE82',this)"></div>
         <div class="color-swatch" style="background:#339972" onclick="setColorPreset('#339972',this)"></div>
-        <div class="color-swatch" style="background:#FF7F50" onclick="setColorPreset('#FF7F50',this)"></div>
-        <div class="color-swatch" style="background:#e74c3c" onclick="setColorPreset('#e74c3c',this)"></div>
-        <div class="color-swatch" style="background:#9b59b6" onclick="setColorPreset('#9b59b6',this)"></div>
-        <div class="color-swatch" style="background:#3498db" onclick="setColorPreset('#3498db',this)"></div>
+        <div class="color-swatch" style="background:#8FD9B3" onclick="setColorPreset('#8FD9B3',this)"></div>
         <div class="color-swatch" style="background:#2ecc71" onclick="setColorPreset('#2ecc71',this)"></div>
-        <div class="color-swatch" style="background:#f39c12" onclick="setColorPreset('#f39c12',this)"></div>
+        <div class="color-swatch" style="background:#6FB8A8" onclick="setColorPreset('#6FB8A8',this)"></div>
         <div class="color-swatch" style="background:#1abc9c" onclick="setColorPreset('#1abc9c',this)"></div>
-        <div class="color-swatch" style="background:#e91e63" onclick="setColorPreset('#e91e63',this)"></div>
+        <div class="color-swatch" style="background:#A9C46C" onclick="setColorPreset('#A9C46C',this)"></div>
+        <div class="color-swatch" style="background:#4A7C59" onclick="setColorPreset('#4A7C59',this)"></div>
+        <div class="color-swatch" style="background:#7FBF9F" onclick="setColorPreset('#7FBF9F',this)"></div>
+        <div class="color-swatch" style="background:#C8E6C9" onclick="setColorPreset('#C8E6C9',this)"></div>
       </div>
       <div class="set-row" style="margin-top:12px"><label>Dark Mode</label><div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="toggle-dark" onchange="toggleDark(this.checked)"><span class="slider"></span></label><span id="dark-label" style="font-size:12px;color:var(--text-sub)">ປິດ</span></div></div>
     </div>
     <div class="settings-section">
       <h4>🔤 ຂະໜາດ & ຮູບແບບ</h4>
       <div class="set-row"><label>ຕົວໜັງສື (px)</label><input type="number" id="set-fontsize" value="14" min="11" max="20" onchange="applyFontSize(this.value)"></div>
-      <div class="set-row"><label>Header ສີ</label><input type="color" id="set-header-bg" value="#F33A6A" onchange="document.getElementById('app-header').style.background=this.value"></div>
+      <div class="set-row"><label>Header ສີ</label><input type="color" id="set-header-bg" value="#5FAE82" onchange="document.getElementById('app-header').style.background=this.value"></div>
       <div class="set-row"><label>Radius (px)</label><input type="number" id="set-radius" value="14" min="0" max="30" onchange="applyRadius(this.value)"></div>
     </div>
     <div class="settings-section">
