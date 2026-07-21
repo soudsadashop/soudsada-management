@@ -329,6 +329,31 @@
     .empty-state{text-align:center;color:#aaa;padding:20px;font-size:12px;}
     .loading-state{text-align:center;color:var(--primary);padding:20px;font-size:13px;}
 
+    /* PAGE 6: ONLINE ORDERS */
+    .ol-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.04);cursor:pointer;transition:background .15s;}
+    .ol-card:hover{background:rgba(var(--primary-rgb),.05);}
+    .ol-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+    .ol-code{font-weight:bold;color:var(--primary);font-size:12px;font-family:monospace;}
+    .ol-time{font-size:10px;color:var(--text-sub);}
+    .ol-cust{font-weight:bold;font-size:13px;margin-top:2px;}
+    .ol-items{font-size:11px;color:var(--text-sub);margin-top:4px;line-height:1.5;}
+    .ol-total{font-weight:bold;color:var(--primary);font-size:13px;white-space:nowrap;}
+    .ol-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:bold;margin-top:6px;}
+    .ol-b0{background:rgba(169,196,108,.25);color:#6b7d3a;}
+    .ol-b1{background:rgba(111,184,168,.25);color:#2f665c;}
+    .ol-b2{background:rgba(95,174,130,.25);color:#316b4a;}
+    .ol-b3{background:rgba(143,217,179,.4);color:#256b45;}
+    .ol-tabbtn{opacity:.55;}
+    .ol-tabbtn.ol-active{opacity:1;}
+    .ol-proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+    .ol-proof-box{background:rgba(var(--primary-rgb),.04);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;}
+    .ol-proof-lbl{font-size:10px;color:var(--text-sub);font-weight:bold;margin-bottom:6px;}
+    .ol-proof-img{width:100%;height:110px;object-fit:cover;border-radius:6px;cursor:pointer;background:#f0f0f0;display:block;}
+    .ol-proof-empty{height:110px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);font-size:10px;border:1.5px dashed var(--border);border-radius:6px;}
+    .ol-status-choice{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1.5px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:12px;font-weight:bold;}
+    .ol-status-choice.ol-current{border-color:var(--primary);background:rgba(var(--primary-rgb),.06);}
+    .ol-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
     /* SPINNER OVERLAY */
     #api-loading{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:9998;display:none;align-items:center;justify-content:center;}
     #api-loading.show{display:flex;}
@@ -637,12 +662,41 @@
     <button class="btn" id="save-settings-btn" onclick="saveSettingsLocal()">💾 ບັນທຶກການຕັ້ງຄ່າ</button>
   </div>
 
+  <!-- PAGE 6: ອອນລາຍ (synced with online store's own Admin Panel) -->
+  <div id="page6" class="page">
+    <div class="card">
+      <h3>🛍️ ອໍເດີ້ອອນລາຍ</h3>
+      <div class="sum-kpi-grid">
+        <div class="sum-kpi kpi-orders"><b id="ol-total">0</b><span>ອໍເດີ້ທັງໝົດ</span></div>
+        <div class="sum-kpi kpi-sales"><b id="ol-customers">0</b><span>ລູກຄ້າ (ບໍ່ຊ້ຳ)</span></div>
+        <div class="sum-kpi kpi-cost"><b id="ol-waiting">0</b><span>ລໍຖ້າຮັບຍອດ</span></div>
+        <div class="sum-kpi kpi-profit"><b id="ol-revenue">0 ₭</b><span>ຍອດລວມ</span></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
+        <button class="btn ol-tabbtn ol-active" id="ol-tab-all" style="flex:1;padding:7px;font-size:11px" onclick="olSetTab('all')">📋 ທັງໝົດ</button>
+        <button class="btn btn-gray ol-tabbtn" id="ol-tab-waiting" style="flex:1;padding:7px;font-size:11px" onclick="olSetTab('waiting')">⏳ ລໍຖ້າ</button>
+        <button class="btn btn-gray ol-tabbtn" id="ol-tab-accepted" style="flex:1;padding:7px;font-size:11px" onclick="olSetTab('accepted')">✅ ຮັບຍອດ</button>
+        <button class="btn btn-gray ol-tabbtn" id="ol-tab-packing" style="flex:1;padding:7px;font-size:11px" onclick="olSetTab('packing')">📦 ກຽມສົ່ງ</button>
+        <button class="btn btn-gray ol-tabbtn" id="ol-tab-shipped" style="flex:1;padding:7px;font-size:11px" onclick="olSetTab('shipped')">🎉 ສົ່ງແລ້ວ</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+        <button class="btn" id="ol-dq-today" style="flex:1;padding:7px;font-size:11px" onclick="olSetDateMode('today')">📅 ມື້ນີ້</button>
+        <button class="btn btn-gray" id="ol-dq-all" style="flex:1;padding:7px;font-size:11px" onclick="olSetDateMode('all')">📋 ທຸກວັນ</button>
+        <input type="date" id="ol-date" style="flex:1.2;min-width:130px;font-size:12px;padding:7px 9px;" onchange="olSetDateMode('pick')">
+      </div>
+      <input type="text" id="ol-search" placeholder="🔍 ຄົ້ນຫາ ຊື່ / ເບີ / ລະຫັດອໍເດີ້..." style="font-size:12px;padding:7px 9px;margin-bottom:8px" oninput="olRender()">
+      <div id="ol-count" style="font-size:11px;color:var(--text-sub);margin-bottom:8px"></div>
+      <div id="ol-list"><div class="loading-state">⏳ ກຳລັງໂຫຼດ...</div></div>
+    </div>
+  </div>
+
   <!-- NAV -->
   <div class="nav">
     <div class="nav-item active-nav" onclick="nav(0,this);loadDash()"><div>🏠</div>ຫຼັກ</div>
     <div class="nav-item" onclick="nav(1,this);loadSelect()"><div>🛒</div>ຂາຍ</div>
     <div class="nav-item" onclick="nav(2,this);loadReportToday()"><div>📊</div>ສະຫຼຸບ</div>
     <div class="nav-item" onclick="nav(3,this);loadStk()"><div>📦</div>ສະຕ໋ອກ</div>
+    <div class="nav-item" onclick="nav(6,this);loadOnlineOrders()"><div>🛍️</div>ອອນລາຍ</div>
     <div class="nav-item" onclick="nav(4,this);loadHis()"><div>📜</div>ປະຫວັດ</div>
     <div class="nav-item" onclick="nav(5,this);loadSettingsPage()"><div>⚙️</div>ຕັ້ງຄ່າ</div>
   </div>
@@ -709,6 +763,40 @@
       <div id="bill-modal-content"></div>
     </div>
   </div>
+
+  <!-- ONLINE ORDER DETAIL MODAL -->
+  <div class="modal-overlay" id="ol-detail-modal">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <div class="modal-title" id="ol-detail-title">📦 ອໍເດີ້</div>
+        <button class="close-btn" onclick="closeModal('ol-detail-modal')">✕</button>
+      </div>
+      <div id="ol-detail-body"></div>
+    </div>
+  </div>
+
+  <!-- ONLINE ORDER: STATUS PICKER MODAL -->
+  <div class="modal-overlay" id="ol-status-modal">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <div class="modal-title">🔖 ປ່ຽນສະຖານະ</div>
+        <button class="close-btn" onclick="closeModal('ol-status-modal')">✕</button>
+      </div>
+      <div id="ol-status-body"></div>
+    </div>
+  </div>
+
+  <!-- ONLINE ORDER: FULLSCREEN IMAGE VIEWER (slip / shipping bill) -->
+  <div class="modal-overlay" id="ol-slip-modal" style="align-items:center">
+    <div style="max-width:94vw;max-height:90vh;position:relative">
+      <button class="close-btn" style="position:absolute;top:-38px;right:0;color:#fff;font-size:26px" onclick="closeModal('ol-slip-modal')">✕</button>
+      <img id="ol-slip-img" src="" style="max-width:94vw;max-height:82vh;border-radius:10px;display:block;margin:0 auto;background:#fff">
+      <a id="ol-slip-drive-link" href="#" target="_blank" style="display:block;text-align:center;margin-top:10px;background:rgba(255,255,255,.95);color:var(--primary);font-weight:bold;font-size:12px;padding:8px;border-radius:8px;text-decoration:none">🔗 ເບິ່ງຢູ່ Google Drive ໂດຍກົງ</a>
+    </div>
+  </div>
+
+  <!-- ONLINE ORDER: hidden file input for admin uploading the shipping bill photo -->
+  <input type="file" id="ol-shipbill-input" accept="image/*" style="display:none" onchange="olHandleShipBillFile(this)">
 
   <div id="receipt-area" style="display:none"></div>
 </div><!-- end #main-app -->
@@ -1562,6 +1650,261 @@ function printReceipt() {
     <p style="text-align:center;margin-top:10px;font-size:11px">ຂອບໃຈ 🙏</p></div>`;
   const w = window.open("", "_blank", "width=380,height=560");
   w.document.write(h); w.document.close(); w.print();
+}
+
+// ════════════════════════════════════════
+// ★ PAGE 6 — ອອນລາຍ (Online Orders)
+// Talks directly to the SAME Apps Script + Orders sheet that the
+// online store's own Admin Panel uses, so both places always match.
+// ════════════════════════════════════════
+const ONLINE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwYP0bCa0PubM1Taf5btkBPD7lgo0MpQnWzntWGc4KP9HZrlWBvIWM0j2EhAat9707Gvg/exec";
+
+const OL_STATUS_LIST = [
+  { code: "0", key: "ລໍຖ້າຮັບຍອດ",        icon: "⏳", cls: "ol-b0", dot: "#A9C46C" },
+  { code: "1", key: "ແມ່ຄ້າຮັບຍອດແລ້ວ",  icon: "✅", cls: "ol-b1", dot: "#6FB8A8" },
+  { code: "2", key: "ກຳລັງກຽມການຈັດສົ່ງ", icon: "📦", cls: "ol-b2", dot: "#5FAE82" },
+  { code: "3", key: "ຈັດສົ່ງສຳເລັດ",      icon: "🎉", cls: "ol-b3", dot: "#8FD9B3" }
+];
+function olStatusCfg(key) { return OL_STATUS_LIST.find(s => s.key === key) || OL_STATUS_LIST[0]; }
+
+let olOrders = [], olTab = "all", olDateMode = "today", olPickedDate = "", olDetailCode = "";
+
+function olTodayIsoVientiane() {
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Vientiane", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date());
+  const o = {}; parts.forEach(p => o[p.type] = p.value);
+  return `${o.year}-${o.month}-${o.day}`;
+}
+function olWaLink(rawPhone) {
+  const digits = String(rawPhone || "").replace(/\D/g, "");
+  if (!digits) return "";
+  const p = digits.indexOf("856") === 0 ? digits : "85620" + digits.slice(-8);
+  return "https://wa.me/" + p;
+}
+
+async function loadOnlineOrders() {
+  document.getElementById("ol-list").innerHTML = '<div class="loading-state">⏳ ກຳລັງໂຫຼດ...</div>';
+  try {
+    const res = await fetch(ONLINE_SCRIPT_URL + "?action=getAllOrders");
+    const data = await res.json();
+    olOrders = Array.isArray(data) ? data : [];
+    olRender();
+  } catch (e) {
+    document.getElementById("ol-list").innerHTML = `<div class="empty-state">❌ ໂຫຼດບໍ່ໄດ້: ${e.message}</div>`;
+  }
+}
+
+function olSetTab(tab) {
+  olTab = tab;
+  ["all","waiting","accepted","packing","shipped"].forEach(t => {
+    document.getElementById("ol-tab-" + t).classList.toggle("ol-active", t === tab);
+    document.getElementById("ol-tab-" + t).className = "btn " + (t === tab ? "" : "btn-gray ") + "ol-tabbtn" + (t === tab ? " ol-active" : "");
+  });
+  olRender();
+}
+function olSetDateMode(mode) {
+  olDateMode = mode;
+  document.getElementById("ol-dq-today").className = "btn" + (mode === "today" ? "" : " btn-gray");
+  document.getElementById("ol-dq-all").className = "btn" + (mode === "all" ? "" : " btn-gray");
+  if (mode === "pick") {
+    olPickedDate = document.getElementById("ol-date").value;
+    if (!olPickedDate) { olDateMode = "all"; document.getElementById("ol-dq-all").className = "btn"; }
+  } else if (mode === "today") {
+    document.getElementById("ol-date").value = "";
+  }
+  olRender();
+}
+
+function olFilteredByDate(list) {
+  if (olDateMode === "all") return list;
+  const target = olDateMode === "today" ? olTodayIsoVientiane() : olPickedDate;
+  if (!target) return list;
+  return list.filter(o => o.dateIso === target);
+}
+
+function olRender() {
+  const dateFiltered = olFilteredByDate(olOrders);
+
+  // KPIs computed over ALL orders (not just date-filtered) so the summary always reflects the whole shop
+  document.getElementById("ol-total").innerText = olOrders.length;
+  document.getElementById("ol-customers").innerText = new Set(olOrders.map(o => o.customerPhone)).size;
+  document.getElementById("ol-waiting").innerText = olOrders.filter(o => o.orderStatus === OL_STATUS_LIST[0].key).length;
+  document.getElementById("ol-revenue").innerText = fN(olOrders.reduce((s, o) => s + (Number(o.totalAmount) || 0), 0)) + " ₭";
+
+  let list = dateFiltered.filter(o => {
+    if (olTab === "waiting")  return o.orderStatus === OL_STATUS_LIST[0].key;
+    if (olTab === "accepted") return o.orderStatus === OL_STATUS_LIST[1].key;
+    if (olTab === "packing")  return o.orderStatus === OL_STATUS_LIST[2].key;
+    if (olTab === "shipped")  return o.orderStatus === OL_STATUS_LIST[3].key;
+    return true;
+  });
+  const q = (document.getElementById("ol-search").value || "").toLowerCase().trim();
+  if (q) list = list.filter(o => (o.code||"").toLowerCase().includes(q) || (o.customerName||"").toLowerCase().includes(q) || (o.customerPhone||"").includes(q));
+
+  const lbl = olDateMode === "today" ? "ມື້ນີ້" : (olDateMode === "all" ? "ທຸກວັນ" : olPickedDate);
+  document.getElementById("ol-count").innerText = `${lbl}: ${dateFiltered.length} ອໍເດີ້ · ສະແດງ ${list.length} ລາຍການ`;
+
+  const el = document.getElementById("ol-list");
+  if (!list.length) { el.innerHTML = '<div class="empty-state">📭 ບໍ່ພົບອໍເດີ້</div>'; return; }
+
+  let h = "";
+  list.slice().reverse().forEach(o => {
+    const cfg = olStatusCfg(o.orderStatus);
+    h += `<div class="ol-card" onclick="olOpenDetail('${o.code}')">
+      <div class="ol-top">
+        <div><span class="ol-code">📦 ${o.code}</span><div class="ol-time">⏰ ${o.submittedAt||""}</div></div>
+        <div class="ol-total">${fN(o.totalAmount)}₭</div>
+      </div>
+      <div class="ol-cust">${o.customerName||"ບໍ່ລະບຸ"}${o.customerPhone?" · 020 "+o.customerPhone:""}</div>
+      <div class="ol-items">${(o.itemsSummary||"").replace(/\n/g,", ")}</div>
+      <span class="ol-badge ${cfg.cls}">${cfg.icon} ${o.orderStatus}</span>
+    </div>`;
+  });
+  el.innerHTML = h;
+}
+
+function olOpenDetail(code) {
+  const o = olOrders.find(x => x.code === code);
+  if (!o) return;
+  olDetailCode = code;
+  const cfg = olStatusCfg(o.orderStatus);
+  document.getElementById("ol-detail-title").innerText = "📦 " + o.code;
+
+  const rows = [
+    ["👤 ຊື່ລູກຄ້າ", o.customerName], ["📱 ເບີໂທ", "020 " + o.customerPhone],
+    ["📍 ທີ່ຢູ່", o.customerAddr], ["🚚 ຂົນສົ່ງ", o.shipping], ["💳 ການຊຳລະ", o.payment],
+    ["💰 ລວມທັງໝົດ", fN(o.totalAmount) + " ₭"], ["📅 ວັນທີສັ່ງ", o.submittedAt], ["🔖 ສະຖານະ", cfg.icon + " " + o.orderStatus]
+  ].filter(r => r[1]);
+
+  let h = `<div style="background:rgba(var(--primary-rgb),.05);border-radius:8px;padding:10px;margin-bottom:10px">`;
+  rows.forEach(r => { h += `<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px dashed var(--border)"><span style="color:var(--text-sub)">${r[0]}</span><b>${escHtmlOl(String(r[1]))}</b></div>`; });
+  h += `</div>`;
+
+  h += `<h4 style="margin-bottom:6px">🛍️ ລາຍການສິນຄ້າ</h4><div style="background:rgba(0,0,0,.02);border-radius:8px;padding:9px;font-size:12px;white-space:pre-line;margin-bottom:10px">${escHtmlOl(o.itemsSummary||"-")}</div>`;
+  if (o.note) h += `<h4 style="margin-bottom:6px">📝 ໝາຍເຫດ</h4><div style="background:rgba(0,0,0,.02);border-radius:8px;padding:9px;font-size:12px;margin-bottom:10px">${escHtmlOl(o.note)}</div>`;
+
+  h += `<h4 style="margin-bottom:6px">📸 ຫຼັກຖານ</h4><div class="ol-proof-grid">`;
+  h += `<div class="ol-proof-box"><div class="ol-proof-lbl">💳 ສະລິບໂອນ</div>`;
+  h += o.slipUrl
+    ? `<img class="ol-proof-img" src="${convertGD(o.slipUrl)}" onerror="this.style.display='none'" onclick="olViewImage('${o.slipUrl.replace(/'/g,"\\'")}')"><button class="btn btn-blue" style="margin-top:6px;font-size:11px;padding:6px" onclick="olViewImage('${o.slipUrl.replace(/'/g,"\\'")}')">🔍 ເບິ່ງເຕັມຈໍ</button>`
+    : `<div class="ol-proof-empty">${o.slipStatus?escHtmlOl(o.slipStatus):"❌ ບໍ່ມີ"}</div>`;
+  h += `</div>`;
+  h += `<div class="ol-proof-box"><div class="ol-proof-lbl">🚚 ບິນຂົນສົ່ງ</div>`;
+  h += o.shippingBillUrl
+    ? `<img class="ol-proof-img" src="${convertGD(o.shippingBillUrl)}" onerror="this.style.display='none'" onclick="olViewImage('${o.shippingBillUrl.replace(/'/g,"\\'")}')"><button class="btn btn-blue" style="margin-top:6px;font-size:11px;padding:6px" onclick="olViewImage('${o.shippingBillUrl.replace(/'/g,"\\'")}')">🔍 ເບິ່ງເຕັມຈໍ</button><button class="btn btn-gray" style="margin-top:6px;font-size:11px;padding:6px" onclick="olTriggerShipBillUpload('${o.code}')">🔄 ປ່ຽນຮູບ</button>`
+    : `<div class="ol-proof-empty">❌ ຍັງບໍ່ມີ</div><button class="btn btn-warn" style="margin-top:6px;font-size:11px;padding:6px" onclick="olTriggerShipBillUpload('${o.code}')">📤 ອັບໂຫຼດ</button>`;
+  h += `</div></div>`;
+
+  const wa = olWaLink(o.customerPhone);
+  if (wa) h += `<a href="${wa}" target="_blank" class="btn btn-sec" style="display:block;text-align:center;text-decoration:none;margin-top:12px">💬 ທັກ WhatsApp ຫາລູກຄ້າ</a>`;
+
+  h += `<button class="btn" style="margin-top:8px" onclick="olOpenStatusPicker('${o.code}')">🔖 ປ່ຽນສະຖານະ</button>`;
+  h += `<button class="btn btn-dang" style="margin-top:8px" onclick="olDeleteOrder('${o.code}')">🗑️ ລົບອໍເດີ້ນີ້</button>`;
+
+  document.getElementById("ol-detail-body").innerHTML = h;
+  openModal("ol-detail-modal");
+}
+function escHtmlOl(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function olViewImage(url) {
+  document.getElementById("ol-slip-img").src = convertGD(url);
+  document.getElementById("ol-slip-drive-link").href = url;
+  openModal("ol-slip-modal");
+}
+
+function olOpenStatusPicker(code) {
+  const o = olOrders.find(x => x.code === code);
+  if (!o) return;
+  let h = "";
+  OL_STATUS_LIST.forEach(s => {
+    const isCur = s.key === o.orderStatus;
+    h += `<div class="ol-status-choice${isCur?" ol-current":""}" onclick="olApplyStatus('${code}','${s.code}')">
+      <span class="ol-dot" style="background:${s.dot}"></span><span>${s.icon} ${s.key}</span>
+      ${isCur ? '<span style="margin-left:auto;color:var(--primary);font-weight:bold">✓</span>' : ""}
+    </div>`;
+  });
+  h += `<div style="font-size:10px;color:var(--text-sub);margin-top:8px;line-height:1.6">ℹ️ ສະຕ໋ອກຈະຖືກຫັກອັດຕະໂນມັດ ພຽງຄັ້ງດຽວ ຕອນປ່ຽນເປັນ "✅ ແມ່ຄ້າຮັບຍອດແລ້ວ"</div>`;
+  document.getElementById("ol-status-body").innerHTML = h;
+  openModal("ol-status-modal");
+}
+
+async function olApplyStatus(code, statusCode) {
+  closeModal("ol-status-modal");
+  showLoading("ກຳລັງອັບເດດສະຖານະ...");
+  try {
+    const res = await fetch(ONLINE_SCRIPT_URL + "?action=updateOrderStatus&code=" + encodeURIComponent(code) + "&status=" + encodeURIComponent(statusCode));
+    const data = await res.json();
+    if (data && data.status === "ok") {
+      const o = olOrders.find(x => x.code === code);
+      if (o) o.orderStatus = data.newStatus;
+      olRender();
+      closeModal("ol-detail-modal");
+      alert("✅ ອັບເດດສະຖານະສຳເລັດ: " + data.newStatus);
+    } else {
+      alert("❌ " + (data && data.message ? data.message : "ອັບເດດບໍ່ສຳເລັດ"));
+    }
+  } catch (e) { alert("❌ " + e.message); }
+  finally { hideLoading(); }
+}
+
+async function olDeleteOrder(code) {
+  if (!confirm("ລົບອໍເດີ້ " + code + " ຖາວອນ? ບໍ່ສາມາດກູ້ຄືນໄດ້")) return;
+  showLoading("ກຳລັງລົບ...");
+  try {
+    const res = await fetch(ONLINE_SCRIPT_URL + "?action=deleteOrder&code=" + encodeURIComponent(code));
+    const data = await res.json();
+    if (data && data.status === "ok") {
+      olOrders = olOrders.filter(o => o.code !== code);
+      olRender();
+      closeModal("ol-detail-modal");
+    } else {
+      alert("❌ " + (data && data.message ? data.message : "ລົບບໍ່ສຳເລັດ"));
+    }
+  } catch (e) { alert("❌ " + e.message); }
+  finally { hideLoading(); }
+}
+
+let olShipBillTargetCode = "";
+function olTriggerShipBillUpload(code) {
+  olShipBillTargetCode = code;
+  const inp = document.getElementById("ol-shipbill-input");
+  inp.value = "";
+  inp.click();
+}
+function olHandleShipBillFile(input) {
+  const file = input.files[0];
+  if (!file || !olShipBillTargetCode) return;
+  if (file.size > 6 * 1024 * 1024) { alert("ຮູບໃຫຍ່ເກີນໄປ (≤ 6MB)"); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let w = img.width, h = img.height; const maxW = 900, maxH = 900;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      const base64 = canvas.toDataURL("image/jpeg", .78);
+      olUploadShipBill(olShipBillTargetCode, base64);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+async function olUploadShipBill(code, base64) {
+  showLoading("ກຳລັງອັບໂຫຼດບິນຂົນສົ່ງ...");
+  try {
+    await fetch(ONLINE_SCRIPT_URL, {
+      method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "uploadShippingBill", code: code, shipBillBase64: base64 })
+    });
+    // no-cors means we can't read the response — reload orders after a short delay instead
+    setTimeout(async () => {
+      await loadOnlineOrders();
+      hideLoading();
+      if (document.getElementById("ol-detail-modal").classList.contains("open")) olOpenDetail(code);
+    }, 1300);
+  } catch (e) { hideLoading(); alert("❌ " + e.message); }
 }
 </script>
 </body>
