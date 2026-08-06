@@ -23,7 +23,6 @@
   <meta property="og:image" content="icons/icon-512.png" />
   <meta property="og:type" content="website" />
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="config.js"></script>
   <style>
     /* ═══════════════════════════════════
@@ -110,32 +109,6 @@
     .bg-dang{background:var(--danger);}
     .bg-succ{background:var(--secondary);}
     .bg-blue{background:var(--blue);}
-
-    /* TICKER */
-    .ticker-wrap{width:100%;background:linear-gradient(90deg,#2E5B41,#5FAE82 40%,#2E5B41);overflow:hidden;height:36px;display:flex;align-items:center;}
-    .ticker-label{flex-shrink:0;background:rgba(255,255,255,.18);color:white;font-size:11px;font-weight:700;padding:0 10px;height:100%;display:flex;align-items:center;border-right:1px solid rgba(255,255,255,.25);white-space:nowrap;}
-    .ticker-body{flex:1;overflow:hidden;position:relative;height:100%;}
-    .ticker-inner{display:flex;align-items:center;height:100%;position:absolute;white-space:nowrap;animation:tickerScroll 30s linear infinite;}
-    .ticker-inner:hover{animation-play-state:paused;}
-    @keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-    .ticker-text{color:white;font-size:12px;font-weight:500;padding:0 28px;display:inline-flex;align-items:center;gap:16px;}
-    .ticker-clock{color:rgba(255,255,255,.9);font-size:11px;font-weight:700;background:rgba(255,255,255,.15);border-radius:8px;padding:2px 8px;border:1px solid rgba(255,255,255,.3);}
-    .ticker-sep{color:rgba(255,255,255,.5);font-size:16px;}
-
-    /* PAGE 0 DASHBOARD */
-    #page0{padding:0;}
-    .dash-page-content{padding:10px;}
-    .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
-    .dash-stat{background:var(--card-bg);border-radius:var(--radius-md);padding:10px 6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.06);}
-    .stat-val{font-size:14px;font-weight:bold;color:var(--primary);}
-    .stat-lbl{font-size:10px;color:var(--text-sub);margin-top:2px;}
-    .bill-list{max-height:280px;overflow-y:auto;}
-    .bill-item{background:rgba(var(--primary-rgb),.04);border:1px solid rgba(var(--primary-rgb),.15);border-radius:8px;padding:8px 10px;margin-bottom:6px;cursor:pointer;transition:background .15s;}
-    .bill-item:hover{background:rgba(var(--primary-rgb),.1);}
-    .bill-item-hdr{display:flex;justify-content:space-between;align-items:center;}
-    .bill-item-name{font-weight:bold;font-size:12px;}
-    .bill-item-amt{color:var(--primary);font-weight:bold;font-size:12px;}
-    .bill-item-sub{font-size:11px;color:var(--text-sub);margin-top:2px;}
 
     /* PAGE 1 SALE */
     #page1{padding:0;}
@@ -347,37 +320,8 @@
     <div class="header-social" id="header-social-links"></div>
   </div>
 
-  <!-- PAGE 0: DASHBOARD -->
-  <div id="page0" class="page active">
-    <div class="ticker-wrap" id="ticker-wrap">
-      <div class="ticker-label">📢 LIVE</div>
-      <div class="ticker-body">
-        <div class="ticker-inner" id="ticker-inner"></div>
-      </div>
-    </div>
-    <div class="dash-page-content">
-      <div class="dash-stats">
-        <div class="dash-stat"><div class="stat-val" id="ds-orders">0</div><div class="stat-lbl">ອໍເດີ</div></div>
-        <div class="dash-stat"><div class="stat-val" id="ds-sales">0</div><div class="stat-lbl">ຍອດ(₭)</div></div>
-        <div class="dash-stat"><div class="stat-val" id="ds-profit" style="color:var(--secondary)">0</div><div class="stat-lbl">ກຳໄລ(₭)</div></div>
-      </div>
-      <div class="card">
-        <h3>📈 ຍອດຂາຍ 30 ວັນ</h3>
-        <div style="height:190px"><canvas id="salesChart"></canvas></div>
-      </div>
-      <div class="card">
-        <h3>🧾 ບິນວັນນີ້</h3>
-        <div class="bill-list" id="today-bills-list"><div class="empty-state">ຍັງບໍ່ມີການຂາຍ</div></div>
-      </div>
-      <div id="dash-detail" class="card" style="display:none;border-left:4px solid var(--primary)">
-        <h4 id="dash-date-title" style="color:var(--primary);margin-bottom:8px"></h4>
-        <div id="dash-table-content"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PAGE 1: ຂາຍ -->
-  <div id="page1" class="page">
+  <!-- PAGE 1: ຂາຍ (now the default landing page) -->
+  <div id="page1" class="page active">
     <div class="sale-layout">
       <div class="sale-left">
         <div class="sale-left-hdr">
@@ -611,8 +555,7 @@
 
   <!-- NAV -->
   <div class="nav">
-    <div class="nav-item active-nav" onclick="nav(0,this);loadDash()"><div>🏠</div>ຫຼັກ</div>
-    <div class="nav-item" onclick="nav(1,this);loadSelect()"><div>🛒</div>ຂາຍ</div>
+    <div class="nav-item active-nav" onclick="nav(1,this);loadSelect()"><div>🛒</div>ຂາຍ</div>
     <div class="nav-item" onclick="nav(2,this);loadReportToday()"><div>📊</div>ສະຫຼຸບ</div>
     <div class="nav-item" onclick="nav(3,this);loadStk()"><div>📦</div>ສະຕ໋ອກ</div>
     <div class="nav-item" onclick="nav(6,this);loadOnlineOrders()"><div>🛍️</div>ອອນລາຍ</div>
@@ -729,7 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // STATE
 // ════════════════════════════════════════
 let cart = [], allProds = [], hisData = { sales: [], logs: [] }, curH = 1;
-let dashData = {}, myChart = null, selectedProd = null;
+let selectedProd = null;
 let curEditName = "";
 let hisAll = { sales: [], logs: [] };
 let allRepRows = [], filteredRepRows = [];
@@ -762,7 +705,6 @@ function initApp() {
     document.getElementById("live-clock").innerText = n.toLocaleDateString("lo-LA") + " | " + n.toLocaleTimeString("lo-LA");
   }, 1000);
   applyStoredSettings();
-  loadDash();
   loadSelect();
   loadBannerSettingsFromAPI();
 }
@@ -935,109 +877,6 @@ function renderSocialLinks(sl) {
   let h = "";
   Object.keys(icons).forEach(k => { const item = sl[k]; if (item && item.url) h += `<a href="${item.url}" target="_blank" class="social-btn"><span>${icons[k]}</span>${item.name||""}</a>`; });
   document.getElementById("header-social-links").innerHTML = h;
-}
-
-// ════════════════════════════════════════
-// DASHBOARD
-// ════════════════════════════════════════
-async function loadDash() {
-  showLoading("ກຳລັງໂຫຼດ Dashboard...");
-  try {
-    const data = await api.get("getDashboard");
-    renderTicker(_savedTickerText || "", []);
-    dashData = data;
-
-    const labels = Object.keys(data).sort();
-    const vals   = labels.map(d => data[d].totalSales);
-    const ctx    = document.getElementById("salesChart").getContext("2d");
-    if (myChart) myChart.destroy();
-    myChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: labels.map(l => l.split("-").slice(1).join("/")),
-        datasets: [{ label: "ຍອດ", data: vals, borderColor: "#339972", backgroundColor: "rgba(51,153,114,.08)", fill: true, tension: .35, pointRadius: 3 }]
-      },
-      options: {
-        maintainAspectRatio: false, plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } },
-        onClick: (e, el) => { if (el.length) showDashDetail(labels[el[0].index]); }
-      }
-    });
-
-    const today = new Date();
-    const tk    = `${today.getFullYear()}-${pad2(today.getMonth()+1)}-${pad2(today.getDate())}`;
-    const td    = data[tk] || { totalSales: 0, profit: 0, rawRows: [] };
-    document.getElementById("ds-orders").innerText = (td.rawRows || []).length;
-    document.getElementById("ds-sales").innerText  = fN(td.totalSales);
-    document.getElementById("ds-profit").innerText = fN(td.profit);
-    renderTodayBills(td.rawRows || []);
-  } catch (e) {
-    alert("❌ ໂຫຼດ Dashboard ບໍ່ສຳເລັດ: " + e.message);
-  } finally {
-    hideLoading();
-  }
-}
-
-function renderTodayBills(rows) {
-  const el = document.getElementById("today-bills-list");
-  if (!rows.length) { el.innerHTML = '<div class="empty-state">ຍັງບໍ່ມີການຂາຍ</div>'; return; }
-  const grouped = {};
-  rows.forEach(r => {
-    const key = `${r[13]}|${r[8]}|${r[9]}`;
-    if (!grouped[key]) grouped[key] = { code: r[13]||"", name: r[8]||"-", phone: r[9]||"", items: [], total: 0, rows: [] };
-    grouped[key].items.push(`${r[1]||""}×${r[2]||0}`);
-    grouped[key].total += Number(r[3]) || 0;
-    grouped[key].rows.push(r);
-  });
-  let h = "";
-  Object.keys(grouped).forEach(k => {
-    const g = grouped[k];
-    h += `<div class="bill-item" onclick='openBillGroup(${JSON.stringify(g.rows).replace(/'/g,"&#39;")})'>
-      <div class="bill-item-hdr"><span class="bill-item-name">${g.name}${g.phone?" ("+g.phone+")":""}${g.code?" #"+g.code:""}</span><span class="bill-item-amt">${fN(g.total)}₭</span></div>
-      <div class="bill-item-sub">${g.items.join(", ")}</div></div>`;
-  });
-  el.innerHTML = h;
-}
-
-function openBillGroup(rows) {
-  let h = "";
-  rows.forEach(r => {
-    h += `<div style="background:rgba(var(--primary-rgb),.04);border:1px solid rgba(var(--primary-rgb),.15);border-radius:8px;padding:10px;margin-bottom:8px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:12px;">`;
-    [["ສິນຄ້າ",r[1]],["ຈຳນວນ",r[2]],["ຍອດ",fN(Number(r[3]))+"₭"],["ທຶນ",fN(Number(r[4]))+"₭"],
-     ["ກຳໄລ",fN(Number(r[5]))+"₭"],["ລູກຄ້າ",r[8]||"-"],["ເບີ",r[9]||"-"],["COD",r[12]||"-"]].forEach(p => {
-      h += `<span style="color:var(--text-sub)">${p[0]}</span><span style="font-weight:bold">${p[1]}</span>`;
-    });
-    h += `</div><div style="display:flex;gap:6px;margin-top:8px">
-      <button class="btn btn-warn" style="flex:1;font-size:11px;padding:7px" onclick='editBillR(${JSON.stringify(r).replace(/'/g,"&#39;")})'>✏️ ແກ້</button>
-      <button class="btn btn-dang" style="flex:1;font-size:11px;padding:7px" onclick='delBillR(${JSON.stringify(r).replace(/'/g,"&#39;")})'>🗑️ ລຶບ</button>
-    </div></div>`;
-  });
-  document.getElementById("bill-modal-content").innerHTML = h;
-  openModal("bill-modal");
-}
-
-async function editBillR(r) {
-  const v = prompt("ຈຳນວນໃໝ່:", r[2]);
-  if (!v) return;
-  showLoading("ກຳລັງແກ້ໄຂ...");
-  try { const res = await api.post("editSaleRow", { dateStr: String(r[0]), name: r[1], oldQty: r[2], newQty: v }); alert(res.message); closeModal("bill-modal"); loadDash(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); }
-}
-async function delBillR(r) {
-  if (!confirm("ລຶບ?")) return;
-  showLoading("ກຳລັງລຶບ...");
-  try { const res = await api.post("cancelSaleData", { dateStr: String(r[0]), name: r[1], qty: r[2] }); alert(res.message); closeModal("bill-modal"); loadDash(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); }
-}
-
-function showDashDetail(date) {
-  const day = dashData[date];
-  document.getElementById("dash-date-title").innerText = "📅 " + date;
-  let h = "<table><tr><th>ສິນຄ້າ</th><th>ຈຳ</th><th>ຍອດ(₭)</th></tr>";
-  let total = 0;
-  (day.items || []).forEach(i => { total += Number(i.total) || 0; h += `<tr><td>${i.name}</td><td>${i.qty}</td><td>${fN(Number(i.total))}</td></tr>`; });
-  h += `<tr style="font-weight:bold;color:var(--primary)"><td colspan="2">ລວມ</td><td>${fN(total)}</td></tr></table>`;
-  document.getElementById("dash-table-content").innerHTML = h;
-  document.getElementById("dash-detail").style.display = "block";
 }
 
 // ════════════════════════════════════════
