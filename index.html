@@ -111,26 +111,6 @@
     .bg-succ{background:var(--secondary);}
     .bg-blue{background:var(--blue);}
 
-    /* BANNER */
-    .banner-wrap{position:relative;width:100%;height:200px;overflow:hidden;background:linear-gradient(135deg,#2E5B41,#5FAE82);border-radius:0 0 var(--radius-lg) var(--radius-lg);box-shadow:0 4px 16px rgba(0,0,0,.15);}
-    .banner-slides{display:flex;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,0,.2,1);}
-    .banner-slide{min-width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;}
-    .banner-slide-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.45),rgba(0,0,0,.15));z-index:1;}
-    .banner-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
-    .banner-slide-info{position:relative;z-index:2;text-align:center;color:white;padding:8px 12px;width:100%;}
-    .banner-rank-badge{display:inline-block;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.55);border-radius:20px;padding:3px 14px;font-size:12px;font-weight:700;margin-bottom:5px;backdrop-filter:blur(4px);}
-    .banner-prod-name{font-size:18px;font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.5);margin-bottom:3px;}
-    .banner-prod-qty{font-size:12px;opacity:.9;background:rgba(255,255,255,.18);border-radius:10px;padding:2px 10px;display:inline-block;}
-    .banner-dots{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;}
-    .banner-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;transition:background .25s,transform .25s;}
-    .banner-dot.active{background:white;transform:scale(1.3);}
-    .banner-arrows{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 8px;z-index:5;pointer-events:none;}
-    .banner-arrow{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);color:white;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:all;transition:background .2s;backdrop-filter:blur(4px);}
-    .banner-arrow:hover{background:rgba(255,255,255,.38);}
-    .banner-placeholder{width:100%;height:200px;background:linear-gradient(135deg,#2E5B41,#4C9670);display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.6);font-size:13px;gap:8px;}
-    .banner-loading-spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.8);border-radius:50%;animation:spin .8s linear infinite;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
     /* TICKER */
     .ticker-wrap{width:100%;background:linear-gradient(90deg,#2E5B41,#5FAE82 40%,#2E5B41);overflow:hidden;height:36px;display:flex;align-items:center;}
     .ticker-label{flex-shrink:0;background:rgba(255,255,255,.18);color:white;font-size:11px;font-weight:700;padding:0 10px;height:100%;display:flex;align-items:center;border-right:1px solid rgba(255,255,255,.25);white-space:nowrap;}
@@ -290,28 +270,6 @@
     .social-icon-lbl{font-size:18px;width:30px;flex-shrink:0;text-align:center;}
     .social-edit-row input{margin:0;flex:1;font-size:12px;padding:7px 9px;}
 
-    /* TOP5 OVERLAY */
-    .top5-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px;}
-    .top5-overlay.open{display:flex;}
-    .top5-box{background:var(--card-bg);border-radius:18px;width:100%;max-width:340px;padding:16px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4);}
-    .top5-title{text-align:center;font-size:14px;font-weight:bold;color:var(--primary);margin-bottom:12px;}
-    .top5-slide{display:none;text-align:center;animation:slideIn .35s ease;}
-    .top5-slide.active{display:block;}
-    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-    .top5-rank{font-size:24px;font-weight:bold;color:var(--primary);margin-bottom:3px;}
-    .top5-img-wrap{width:150px;height:150px;margin:0 auto 9px;border-radius:12px;overflow:hidden;background:#f0f0f0;border:3px solid var(--primary);}
-    .top5-img-wrap img{width:100%;height:100%;object-fit:cover;}
-    .top5-pname{font-size:14px;font-weight:bold;margin-bottom:3px;}
-    .top5-qty{font-size:11px;color:#888;}
-    .top5-nav{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
-    .top5-nav button{background:var(--primary);color:white;border:none;border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;font-weight:bold;
-      box-shadow:0 3px 0 rgba(0,0,0,.15);transition:transform .14s cubic-bezier(.34,1.56,.64,1), box-shadow .14s ease;}
-    .top5-nav button:active{transform:translateY(2px) scale(.95);box-shadow:0 0 0 rgba(0,0,0,.15);}
-    .top5-dots{display:flex;gap:5px;}
-    .top5-dot{width:7px;height:7px;border-radius:50%;background:#ddd;cursor:pointer;transition:background .2s;}
-    .top5-dot.active{background:var(--primary);}
-    .top5-close{position:absolute;top:10px;right:12px;font-size:18px;cursor:pointer;color:#aaa;background:none;border:none;}
-
     /* MODALS */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:3000;align-items:flex-end;justify-content:center;}
     .modal-overlay.open{display:flex;}
@@ -379,10 +337,9 @@
   <div class="header" id="app-header">
     <div class="header-top">
       <img id="header-logo" src="https://i.postimg.cc/d322Q33X/LOGO.jpg" class="shop-logo"
-        onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 60\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'30\' fill=\'%23339972\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' text-anchor=\'middle\' fill=\'white\' font-size=\'20\'%3ES%3C/text%3E%3C/svg%3E'"
-        onclick="openTop5()">
+        onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 60\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'30\' fill=\'%23339972\'/%3E%3Ctext x=\'50%25\' y=\'55%25\' text-anchor=\'middle\' fill=\'white\' font-size=\'20\'%3ES%3C/text%3E%3C/svg%3E'">
       <div class="header-info">
-        <div id="shop-name-display" onclick="openTop5()">SOUDSADA SHOP</div>
+        <div id="shop-name-display">SOUDSADA SHOP</div>
         <div id="live-clock"></div>
       </div>
 
@@ -390,46 +347,8 @@
     <div class="header-social" id="header-social-links"></div>
   </div>
 
-  <!-- TOP5 OVERLAY -->
-  <div class="top5-overlay" id="top5-overlay">
-    <div class="top5-box">
-      <button class="top5-close" onclick="closeTop5()">✕</button>
-      <div class="top5-title">🏆 Top 5 ສິນຄ້າຂາຍດີ ອາທິດນີ້</div>
-      <div id="top5-slides">
-        <div class="top5-slide active"><div class="top5-rank">🥇</div><div class="top5-img-wrap"><img id="t5img0" src=""></div><div class="top5-pname" id="t5name0">...</div><div class="top5-qty" id="t5qty0"></div></div>
-        <div class="top5-slide"><div class="top5-rank">🥈</div><div class="top5-img-wrap"><img id="t5img1" src=""></div><div class="top5-pname" id="t5name1">-</div><div class="top5-qty" id="t5qty1"></div></div>
-        <div class="top5-slide"><div class="top5-rank">🥉</div><div class="top5-img-wrap"><img id="t5img2" src=""></div><div class="top5-pname" id="t5name2">-</div><div class="top5-qty" id="t5qty2"></div></div>
-        <div class="top5-slide"><div class="top5-rank">4️⃣</div><div class="top5-img-wrap"><img id="t5img3" src=""></div><div class="top5-pname" id="t5name3">-</div><div class="top5-qty" id="t5qty3"></div></div>
-        <div class="top5-slide"><div class="top5-rank">5️⃣</div><div class="top5-img-wrap"><img id="t5img4" src=""></div><div class="top5-pname" id="t5name4">-</div><div class="top5-qty" id="t5qty4"></div></div>
-      </div>
-      <div class="top5-nav">
-        <button onclick="prevTop5()">◀</button>
-        <div class="top5-dots" id="top5-dots">
-          <div class="top5-dot active" onclick="gotoTop5(0)"></div>
-          <div class="top5-dot" onclick="gotoTop5(1)"></div>
-          <div class="top5-dot" onclick="gotoTop5(2)"></div>
-          <div class="top5-dot" onclick="gotoTop5(3)"></div>
-          <div class="top5-dot" onclick="gotoTop5(4)"></div>
-        </div>
-        <button onclick="nextTop5()">▶</button>
-      </div>
-    </div>
-  </div>
-
   <!-- PAGE 0: DASHBOARD -->
   <div id="page0" class="page active">
-    <div class="banner-wrap" id="banner-wrap">
-      <div class="banner-placeholder" id="banner-loading">
-        <div class="banner-loading-spinner"></div>
-        <span>ກຳລັງໂຫຼດສິນຄ້າຂາຍດີ...</span>
-      </div>
-      <div class="banner-slides" id="banner-slides" style="display:none"></div>
-      <div class="banner-dots" id="banner-dots" style="display:none"></div>
-      <div class="banner-arrows">
-        <div class="banner-arrow" onclick="bannerPrev()">‹</div>
-        <div class="banner-arrow" onclick="bannerNext()">›</div>
-      </div>
-    </div>
     <div class="ticker-wrap" id="ticker-wrap">
       <div class="ticker-label">📢 LIVE</div>
       <div class="ticker-body">
@@ -612,7 +531,7 @@
       <button class="btn btn-gray" style="width:auto;padding:7px 12px;font-size:12px;margin-bottom:8px" onclick="previewSettingsLogo()">👁️ ເບິ່ງ</button>
     </div>
     <div class="settings-section">
-      <h4>📢 ຕັ້ງຄ່າ Banner & Ticker</h4>
+      <h4>📢 ຕັ້ງຄ່າ Ticker</h4>
       <label style="font-size:11px;color:var(--primary);font-weight:700;display:block;margin-bottom:5px;">📝 ຂໍ້ຄວາມ Ticker</label>
       <textarea id="set-ticker-text" rows="3" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--input-bg);color:var(--text);resize:vertical;" placeholder="ຕຍ: 🔥 Soudsada Shop · ສິນຄ້າຂາຍດີ 🛒"></textarea>
       <div style="display:flex;gap:6px;margin-top:8px">
@@ -811,11 +730,9 @@ document.addEventListener("DOMContentLoaded", () => {
 // ════════════════════════════════════════
 let cart = [], allProds = [], hisData = { sales: [], logs: [] }, curH = 1;
 let dashData = {}, myChart = null, selectedProd = null;
-let top5Idx = 0, top5Data = [], top5Timer = null;
 let curEditName = "";
 let hisAll = { sales: [], logs: [] };
 let allRepRows = [], filteredRepRows = [];
-let bannerItems = [], bannerIdx = 0, bannerTimer = null;
 let tickerClockInterval = null;
 let _savedTickerText = "";
 
@@ -848,7 +765,6 @@ function initApp() {
   loadDash();
   loadSelect();
   loadBannerSettingsFromAPI();
-  setTimeout(() => openTop5(), 1500);
 }
 
 function nav(p, el) {
@@ -857,73 +773,6 @@ function nav(p, el) {
   document.querySelectorAll(".nav-item").forEach(x => x.classList.remove("active-nav"));
   el.classList.add("active-nav");
 }
-
-// ════════════════════════════════════════
-// BANNER SLIDER
-// ════════════════════════════════════════
-function loadBanner(top10Data) {
-  const slidesEl  = document.getElementById("banner-slides");
-  const dotsEl    = document.getElementById("banner-dots");
-  const loadingEl = document.getElementById("banner-loading");
-
-  if (!top10Data || top10Data.length === 0) {
-    loadingEl.innerHTML = '<div style="font-size:28px">🏪</div><span>ຍັງບໍ່ມີຂໍ້ມູນການຂາຍ</span>';
-    return;
-  }
-
-  bannerItems = top10Data;
-  bannerIdx   = 0;
-  const rankEmoji = ["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
-  let slidesHTML = "", dotsHTML = "";
-
-  top10Data.forEach((item, i) => {
-    const imgUrl = item.img ? convertGD(item.img) : "";
-    const imgTag = imgUrl ? `<img src="${imgUrl}" alt="${item.name}" onerror="this.style.display='none'">` : "";
-    slidesHTML += `
-      <div class="banner-slide">
-        ${imgTag}
-        <div class="banner-slide-bg"></div>
-        <div class="banner-slide-info">
-          <div class="banner-rank-badge">${rankEmoji[i]} Top ${i+1} ສິນຄ້າຂາຍດີ</div>
-          <div class="banner-prod-name">${item.name}</div>
-          <div class="banner-prod-qty">🛒 ຂາຍໄດ້ ${fN(item.qty)} ຊິ້ນ ອາທິດນີ້</div>
-        </div>
-      </div>`;
-    dotsHTML += `<div class="banner-dot${i===0?" active":""}" onclick="bannerGoto(${i})"></div>`;
-  });
-
-  slidesEl.innerHTML = slidesHTML;
-  dotsEl.innerHTML   = dotsHTML;
-  loadingEl.style.display = "none";
-  slidesEl.style.display  = "flex";
-  dotsEl.style.display    = "flex";
-  bannerGoto(0);
-  clearInterval(bannerTimer);
-  bannerTimer = setInterval(bannerNext, 3500);
-}
-
-function bannerGoto(idx) {
-  if (!bannerItems.length) return;
-  bannerIdx = ((idx % bannerItems.length) + bannerItems.length) % bannerItems.length;
-  document.getElementById("banner-slides").style.transform = `translateX(-${bannerIdx * 100}%)`;
-  document.querySelectorAll(".banner-dot").forEach((d, i) => d.classList.toggle("active", i === bannerIdx));
-}
-function bannerNext() { bannerGoto(bannerIdx + 1); }
-function bannerPrev() { bannerGoto(bannerIdx - 1); }
-
-// Touch swipe
-(() => {
-  let startX = 0;
-  document.addEventListener("DOMContentLoaded", () => {
-    const bw = document.getElementById("banner-wrap");
-    if (!bw) return;
-    bw.addEventListener("touchstart", e => { startX = e.touches[0].clientX; }, {passive: true});
-    bw.addEventListener("touchend",   e => {
-      const diff = startX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 40) { diff > 0 ? bannerNext() : bannerPrev(); }
-    }, {passive: true});
-  });
-})();
 
 // ════════════════════════════════════════
 // TICKER
@@ -978,7 +827,7 @@ async function saveBannerSettingsToAPI() {
   try {
     const res = await api.post("saveBannerSettings", { settings: { tickerText: txt } });
     _savedTickerText = txt;
-    renderTicker(txt, bannerItems);
+    renderTicker(txt, []);
     alert("✅ " + res.message);
   } catch (e) {
     alert("❌ " + e.message);
@@ -1094,12 +943,8 @@ function renderSocialLinks(sl) {
 async function loadDash() {
   showLoading("ກຳລັງໂຫຼດ Dashboard...");
   try {
-    const [top10, data] = await Promise.all([
-      api.get("getWeeklyTop10"),
-      api.get("getDashboard")
-    ]);
-    loadBanner(top10);
-    renderTicker(_savedTickerText || "", top10);
+    const data = await api.get("getDashboard");
+    renderTicker(_savedTickerText || "", []);
     dashData = data;
 
     const labels = Object.keys(data).sort();
@@ -1126,7 +971,6 @@ async function loadDash() {
     document.getElementById("ds-sales").innerText  = fN(td.totalSales);
     document.getElementById("ds-profit").innerText = fN(td.profit);
     renderTodayBills(td.rawRows || []);
-    computeTop5(data);
   } catch (e) {
     alert("❌ ໂຫຼດ Dashboard ບໍ່ສຳເລັດ: " + e.message);
   } finally {
@@ -1195,48 +1039,6 @@ function showDashDetail(date) {
   document.getElementById("dash-table-content").innerHTML = h;
   document.getElementById("dash-detail").style.display = "block";
 }
-
-// ════════════════════════════════════════
-// TOP 5 OVERLAY
-// ════════════════════════════════════════
-function computeTop5(dd) {
-  const today = new Date();
-  const salesMap = {};
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(today); d.setDate(today.getDate() - i);
-    const k = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-    if (dd[k] && dd[k].items) dd[k].items.forEach(item => { salesMap[item.name] = (salesMap[item.name] || 0) + Number(item.qty || 0); });
-  }
-  const sorted = Object.keys(salesMap).map(n => ({ name: n, qty: salesMap[n] })).sort((a, b) => b.qty - a.qty);
-  top5Data = sorted.slice(0, 5);
-  top5Data.forEach(item => { const p = allProds.find(x => x.name === item.name); item.img = p && p.img ? convertGD(p.img) : ""; });
-  renderTop5Slides();
-}
-function renderTop5Slides() {
-  top5Data.forEach((item, i) => {
-    const imgEl = document.getElementById("t5img" + i); if (!imgEl) return;
-    imgEl.src = item.img || noImg;
-    document.getElementById("t5name" + i).innerText = item.name;
-    document.getElementById("t5qty" + i).innerText = "🛒 " + fN(item.qty) + " ຊິ້ນ (ອາທິດ)";
-  });
-  for (let i = top5Data.length; i < 5; i++) {
-    const sl = document.querySelectorAll(".top5-slide")[i];
-    const dt = document.querySelectorAll(".top5-dot")[i];
-    if (sl) sl.style.display = "none";
-    if (dt) dt.style.display = "none";
-  }
-}
-function openTop5()  { if (!top5Data.length) document.getElementById("t5name0").innerText = "ຍັງບໍ່ມີຂໍ້ມູນ"; document.getElementById("top5-overlay").classList.add("open"); gotoTop5(0); clearInterval(top5Timer); top5Timer = setInterval(nextTop5, 3000); }
-function closeTop5() { document.getElementById("top5-overlay").classList.remove("open"); clearInterval(top5Timer); }
-function gotoTop5(idx) {
-  const slides = document.querySelectorAll(".top5-slide"), dots = document.querySelectorAll(".top5-dot");
-  top5Idx = Math.max(0, Math.min(idx, Math.max(0, top5Data.length - 1)));
-  slides.forEach(s => s.classList.remove("active")); dots.forEach(d => d.classList.remove("active"));
-  if (slides[top5Idx]) slides[top5Idx].classList.add("active");
-  if (dots[top5Idx])   dots[top5Idx].classList.add("active");
-}
-function nextTop5() { gotoTop5((top5Idx + 1) % Math.max(1, top5Data.length)); }
-function prevTop5() { gotoTop5((top5Idx - 1 + Math.max(1, top5Data.length)) % Math.max(1, top5Data.length)); }
 
 // ════════════════════════════════════════
 // PRODUCTS
