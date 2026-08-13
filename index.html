@@ -315,6 +315,24 @@
       100%{opacity:0;}
     }
     .api-spinner-text{font-size:13px;color:var(--text);}
+
+    /* SUCCESS POPUP (ຂາຍສຳເລັດ) */
+    #success-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;padding:20px;}
+    #success-popup.show{display:flex;}
+    .success-box{background:var(--card-bg);border-radius:22px;padding:34px 30px 28px;text-align:center;box-shadow:0 14px 44px rgba(0,0,0,.32);max-width:300px;width:100%;
+      animation:successPop .4s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes successPop{0%{transform:scale(.4);opacity:0;}60%{transform:scale(1.08);opacity:1;}100%{transform:scale(1);}}
+    .success-ring{width:84px;height:84px;border-radius:50%;margin:0 auto 16px;position:relative;display:flex;align-items:center;justify-content:center;
+      background:radial-gradient(circle,rgba(var(--primary-rgb),.16) 60%,transparent 62%);animation:successRing .6s ease;}
+    @keyframes successRing{0%{transform:scale(0);}70%{transform:scale(1.15);}100%{transform:scale(1);}}
+    .success-check{width:64px;height:64px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center;
+      box-shadow:0 6px 18px rgba(var(--primary-rgb),.45);}
+    .success-check svg{width:34px;height:34px;}
+    .success-check svg path{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:checkDraw .45s .2s ease forwards;}
+    @keyframes checkDraw{to{stroke-dashoffset:0;}}
+    .success-title{font-size:19px;font-weight:bold;color:var(--primary);margin-bottom:6px;}
+    .success-msg{font-size:13px;color:var(--text-sub);line-height:1.5;word-break:break-word;}
+    .success-close{margin-top:18px;background:rgba(var(--primary-rgb),.1);color:var(--primary);border:none;border-radius:20px;padding:8px 22px;font-size:12px;font-weight:bold;cursor:pointer;}
   </style>
 </head>
 <body>
@@ -330,6 +348,20 @@
       <span class="cat-emoji">🐈</span>
     </div>
     <div class="api-spinner-text">ກຳລັງໂຫຼດ...</div>
+  </div>
+</div>
+
+<!-- SUCCESS POPUP: shown after a sale is recorded successfully -->
+<div id="success-popup" onclick="if(event.target===this) hideSuccessPopup()">
+  <div class="success-box">
+    <div class="success-ring">
+      <div class="success-check">
+        <svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>
+      </div>
+    </div>
+    <div class="success-title">ຂາຍສຳເລັດ! 🎉</div>
+    <div class="success-msg" id="success-popup-msg"></div>
+    <button class="success-close" onclick="hideSuccessPopup()">ປິດ</button>
   </div>
 </div>
 
@@ -721,6 +753,29 @@ function hideLoading() {
 }
 
 // ════════════════════════════════════════
+// SUCCESS POPUP (ຂາຍສຳເລັດ)
+// ════════════════════════════════════════
+function showSuccessPopup(msg, duration = 2500) {
+  const el = document.getElementById("success-popup");
+  document.getElementById("success-popup-msg").innerText = msg || "";
+  el.classList.add("show");
+  // restart the checkmark draw + ring animations every time it's shown
+  const path = el.querySelector(".success-check svg path");
+  const ring = el.querySelector(".success-ring");
+  const box  = el.querySelector(".success-box");
+  [path, ring, box].forEach(node => { node.style.animation = "none"; });
+  void el.offsetWidth; // force reflow so the animation restarts
+  [path, ring, box].forEach(node => { node.style.animation = ""; });
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(hideSuccessPopup, duration);
+}
+function hideSuccessPopup() {
+  const el = document.getElementById("success-popup");
+  clearTimeout(el._hideTimer);
+  el.classList.remove("show");
+}
+
+// ════════════════════════════════════════
 // HELPERS
 // ════════════════════════════════════════
 function closeModal(id) { document.getElementById(id).classList.remove("open"); }
@@ -1007,11 +1062,12 @@ async function submitSale() {
   if (!cart.length) { alert("ຍັງບໍ່ໄດ້ເພີ່ມ!"); return; }
   const cf = getCF();
   cart.forEach(it => Object.assign(it, { customerName: cf.cName, customerPhone: cf.cPhone, customerAddr: cf.cAddr, shipping: cf.cShip, cod: cf.cCod }));
+  const saleTotal = cart.reduce((s, it) => s + (it.qty * it.price - it.discount), 0);
   showLoading("ກຳລັງບັນທຶກການຂາຍ...");
   try {
     const res = await api.post("recordBulkSale", { cart });
-    alert(res.message);
     cart = []; renderCart(); clearCF(); loadSelect(); loadDash();
+    showSuccessPopup(`ລວມ ${fN(saleTotal)} ₭ · ${res.message || ""}`.trim());
   } catch (e) { alert("❌ " + e.message); }
   finally { hideLoading(); }
 }
