@@ -1,3 +1,4 @@
+cat > /home/claude/soudsada/index.html << 'INDEXHTML_EOF'
 <!DOCTYPE html>
 <html lang="lo">
 <head>
@@ -1345,7 +1346,7 @@ function renderHisItems(t) {
         const typeClass = isSell ? "type-sell" : change.startsWith("+") ? "type-add" : "type-other";
         h += `<div class="his-log-card ${typeClass}">
           <div class="his-log-top"><div><div class="his-log-name">${r[1]}</div></div><div class="his-log-change ${isSell?"neg":"pos"}">${change}</div></div>
-          <div class="his-log-detail"><span>📋 <b>${r[3]||"-"}</b></span><span>📦 ຄົງ: <b style="color:var(--primary)">${r[4]||"-"}</b> ຊີ້ນ</span><span>⏰ ${fmtDTFull(r[0])}</span></div>
+          <div class="his-log-detail"><span>📋 <b>${r[3]||"-"}</b></span><span>📦 ຄົງ: <b style="color:var(--primary)">${r[4]||"-"}</b> ຊິ້ນ</span><span>⏰ ${fmtDTFull(r[0])}</span></div>
           <div style="display:flex;gap:5px;margin-top:6px">
             <button class="btn btn-warn" style="flex:1;font-size:11px;padding:6px" onclick='edStock(${JSON.stringify(r).replace(/'/g,"&#39;")})'>✏️ ແກ້</button>
             <button class="btn btn-dang" style="flex:1;font-size:11px;padding:6px" onclick='canStock(${JSON.stringify(r).replace(/'/g,"&#39;")})'>🗑️ ລຶບ</button>
@@ -1636,3 +1637,5 @@ async function olUploadShipBill(code, base64) {
 </script>
 </body>
 </html>
+INDEXHTML_EOF
+wc -l /home/claude/soudsada/index.html
