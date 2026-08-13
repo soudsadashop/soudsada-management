@@ -3,7 +3,7 @@
 // ✏️  ປ່ຽນ API_URL ຂ້າງລຸ່ມໃຫ້ຕົງກັບ Web App URL ທີ່ Deploy ແລ້ວ
 // ================================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycby_2I22sMe_dYjg_CZE3eY4VRwb4GfFxivYePXnxjODazgKmPjrPoRe2WjZzzZKIP94/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwnVtsLgjjZ6mC-nUBKPwfmVQGUyWY3yw1yFg1nGhQ3MII_HwJtsm8JP6LmGMGOWjM/exec";
 
 // ================================================================
 // API Client — ຟັງຊັນ wrapper ສຳລັບ GET ແລະ POST
