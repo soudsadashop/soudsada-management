@@ -1066,7 +1066,7 @@ async function submitSale() {
   showLoading("ກຳລັງບັນທຶກການຂາຍ...");
   try {
     const res = await api.post("recordBulkSale", { cart });
-    cart = []; renderCart(); clearCF(); loadSelect(); loadDash();
+    cart = []; renderCart(); clearCF(); loadSelect();
     showSuccessPopup(`ລວມ ${fN(saleTotal)} ₭ · ${res.message || ""}`.trim());
   } catch (e) { alert("❌ " + e.message); }
   finally { hideLoading(); }
@@ -1355,8 +1355,8 @@ function renderHisItems(t) {
     el.innerHTML = h || '<div class="empty-state">ບໍ່ມີຂໍ້ມູນ</div>';
   }
 }
-async function canSale(r) { if (!confirm("ລຶບ?")) return; showLoading("ກຳລັງລຶບ..."); try { const res = await api.post("cancelSaleData", { dateStr: String(r[0]), name: r[1], qty: r[2] }); alert(res.message); loadHis(); loadDash(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
-async function edSale(r)   { const v = prompt("ຈຳນວນໃໝ່:", r[2]); if (!v) return; showLoading("ກຳລັງແກ້ໄຂ..."); try { const res = await api.post("editSaleRow", { dateStr: String(r[0]), name: r[1], oldQty: r[2], newQty: v }); alert(res.message); loadHis(); loadDash(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
+async function canSale(r) { if (!confirm("ລຶບ?")) return; showLoading("ກຳລັງລຶບ..."); try { const res = await api.post("cancelSaleData", { dateStr: String(r[0]), name: r[1], qty: r[2] }); alert(res.message); loadHis(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
+async function edSale(r)   { const v = prompt("ຈຳນວນໃໝ່:", r[2]); if (!v) return; showLoading("ກຳລັງແກ້ໄຂ..."); try { const res = await api.post("editSaleRow", { dateStr: String(r[0]), name: r[1], oldQty: r[2], newQty: v }); alert(res.message); loadHis(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
 async function canStock(r) { if (!confirm("ລຶບ?")) return; showLoading("ກຳລັງລຶບ..."); try { const res = await api.post("cancelStockRow", { dateStr: String(r[0]), name: r[1], qty: r[2] }); alert(res.message); loadHis(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
 async function edStock(r)  { const v = prompt("ຈຳນວນໃໝ່:", r[2]); if (!v) return; showLoading("ກຳລັງແກ້ໄຂ..."); try { const res = await api.post("editStockRow", { dateStr: String(r[0]), name: r[1], oldQty: r[2], newQty: v }); alert(res.message); loadHis(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
 
