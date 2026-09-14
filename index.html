@@ -333,6 +333,21 @@
     .success-title{font-size:19px;font-weight:bold;color:var(--primary);margin-bottom:6px;}
     .success-msg{font-size:13px;color:var(--text-sub);line-height:1.5;word-break:break-word;}
     .success-close{margin-top:18px;background:rgba(var(--primary-rgb),.1);color:var(--primary);border:none;border-radius:20px;padding:8px 22px;font-size:12px;font-weight:bold;cursor:pointer;}
+
+    /* ═══════════════════════════════════
+       CUSTOM ALERT / CONFIRM / PROMPT (replaces native browser dialogs)
+    ═══════════════════════════════════ */
+    #cm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;align-items:center;justify-content:center;padding:22px;}
+    #cm-overlay.open{display:flex;}
+    .cm-box{background:var(--card-bg);border-radius:22px;padding:28px 22px 22px;text-align:center;max-width:320px;width:100%;
+      box-shadow:0 14px 44px rgba(0,0,0,.32);animation:successPop .32s cubic-bezier(.34,1.56,.64,1);}
+    .cm-icon-wrap{width:68px;height:68px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:32px;
+      background:radial-gradient(circle,rgba(var(--primary-rgb),.16) 60%,transparent 62%);animation:successRing .5s ease;}
+    .cm-title{font-size:16px;font-weight:bold;color:var(--primary);margin-bottom:8px;}
+    .cm-msg{font-size:13px;color:var(--text-sub);line-height:1.6;white-space:pre-line;word-break:break-word;margin-bottom:6px;}
+    .cm-input{margin-top:10px;text-align:center;font-size:15px;font-weight:bold;border:1.5px solid var(--primary);}
+    .cm-btns{display:flex;gap:8px;margin-top:16px;}
+    .cm-btns .btn{margin:0;}
   </style>
 </head>
 <body>
@@ -362,6 +377,17 @@
     <div class="success-title">ຂາຍສຳເລັດ! 🎉</div>
     <div class="success-msg" id="success-popup-msg"></div>
     <button class="success-close" onclick="hideSuccessPopup()">ປິດ</button>
+  </div>
+</div>
+
+<!-- CUSTOM ALERT / CONFIRM / PROMPT POPUP (replaces native browser alert/confirm/prompt) -->
+<div id="cm-overlay">
+  <div class="cm-box">
+    <div class="cm-icon-wrap" id="cm-icon-wrap"><span id="cm-icon">🔔</span></div>
+    <div class="cm-title" id="cm-title">ແຈ້ງເຕືອນ</div>
+    <div class="cm-msg" id="cm-msg"></div>
+    <input type="text" id="cm-input" class="cm-input" style="display:none">
+    <div class="cm-btns" id="cm-btns"></div>
   </div>
 </div>
 
@@ -777,6 +803,84 @@ function hideSuccessPopup() {
 }
 
 // ════════════════════════════════════════
+// CUSTOM ALERT / CONFIRM / PROMPT
+// Replaces native browser alert()/confirm()/prompt() with a themed,
+// animated popup that matches the rest of the app.
+// ════════════════════════════════════════
+function cmShow({ icon = "🔔", title = "ແຈ້ງເຕືອນ", msg = "", showInput = false, inputValue = "", buttons = [{ label: "ຕົກລົງ", style: "", submit: true }] }) {
+  return new Promise(resolve => {
+    const overlay = document.getElementById("cm-overlay");
+    document.getElementById("cm-icon").innerText = icon;
+    document.getElementById("cm-title").innerText = title;
+    document.getElementById("cm-msg").innerText = msg;
+    const input = document.getElementById("cm-input");
+    input.style.display = showInput ? "block" : "none";
+    input.value = inputValue != null ? inputValue : "";
+    input.type = showInput === "number" ? "number" : "text";
+
+    const btnsWrap = document.getElementById("cm-btns");
+    btnsWrap.innerHTML = "";
+    let settled = false;
+    const finish = (val) => {
+      if (settled) return;
+      settled = true;
+      overlay.classList.remove("open");
+      input.onkeydown = null;
+      resolve(val);
+    };
+    buttons.forEach(b => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn" + (b.style ? " " + b.style : "");
+      btn.style.flex = "1";
+      btn.innerText = b.label;
+      btn.onclick = () => finish(showInput ? (b.submit ? input.value : null) : (b.submit !== undefined ? b.submit : true));
+      btnsWrap.appendChild(btn);
+    });
+
+    // restart the icon "pop" animation each time
+    const iconWrap = document.getElementById("cm-icon-wrap");
+    iconWrap.style.animation = "none";
+    void overlay.offsetWidth;
+    iconWrap.style.animation = "";
+
+    overlay.classList.add("open");
+    if (showInput) {
+      input.onkeydown = (e) => { if (e.key === "Enter") { const submitBtn = buttons.find(b => b.submit); finish(submitBtn ? input.value : null); } };
+      setTimeout(() => { input.focus(); input.select(); }, 250);
+    }
+  });
+}
+
+function showAlert(msg, title) {
+  const m = String(msg == null ? "" : msg);
+  let icon = "🔔";
+  if (m.indexOf("❌") !== -1) icon = "❌";
+  else if (m.indexOf("✅") !== -1) icon = "✅";
+  else if (m.indexOf("⚠️") !== -1) icon = "⚠️";
+  return cmShow({ icon, title: title || "ແຈ້ງເຕືອນ", msg: m, buttons: [{ label: "ຕົກລົງ", style: "", submit: true }] });
+}
+function showConfirm(msg, title) {
+  return cmShow({
+    icon: "⚠️", title: title || "ຢືນຢັນ", msg: String(msg == null ? "" : msg),
+    buttons: [
+      { label: "❌ ຍົກເລີກ", style: "btn-gray", submit: false },
+      { label: "✅ ຕົກລົງ", style: "btn-dang", submit: true }
+    ]
+  });
+}
+function showPrompt(msg, defaultVal, title) {
+  return cmShow({
+    icon: "✏️", title: title || "ແກ້ໄຂຈຳນວນ", msg: String(msg == null ? "" : msg),
+    showInput: "number", inputValue: defaultVal,
+    buttons: [
+      { label: "❌ ຍົກເລີກ", style: "btn-gray", submit: false },
+      { label: "✅ ຕົກລົງ", style: "", submit: true }
+    ]
+  });
+}
+
+// ════════════════════════════════════════
 // HELPERS
 // ════════════════════════════════════════
 function closeModal(id) { document.getElementById(id).classList.remove("open"); }
@@ -850,15 +954,15 @@ async function loadBannerSettingsFromAPI() {
 
 async function saveBannerSettingsToAPI() {
   const txt = (document.getElementById("set-ticker-text").value || "").trim();
-  if (!txt) { alert("ກະລຸນາໃສ່ຂໍ້ຄວາມ Ticker!"); return; }
+  if (!txt) { await showAlert("ກະລຸນາໃສ່ຂໍ້ຄວາມ Ticker!"); return; }
   showLoading("ກຳລັງບັນທຶກ...");
   try {
     const res = await api.post("saveBannerSettings", { settings: { tickerText: txt } });
     _savedTickerText = txt;
     renderTicker(txt, []);
-    alert("✅ " + res.message);
+    await showAlert("✅ " + res.message);
   } catch (e) {
-    alert("❌ " + e.message);
+    await showAlert("❌ " + e.message);
   } finally {
     hideLoading();
   }
@@ -1001,8 +1105,8 @@ function renderProdGrid(prods) {
   grid.innerHTML = h;
   if (selectedProd) document.querySelectorAll(".prod-card").forEach(c => { if (c.querySelector(".prod-name") && c.querySelector(".prod-name").innerText === selectedProd) c.classList.add("selected"); });
 }
-function selectProd(name, qty) {
-  if (qty <= 0) { alert("⚠️ ສິນຄ້ານີ້ໝົດ!"); return; }
+async function selectProd(name, qty) {
+  if (qty <= 0) { await showAlert("⚠️ ສິນຄ້ານີ້ໝົດ!"); return; }
   if (selectedProd === name) { selectedProd = null; document.querySelectorAll(".prod-card").forEach(c => c.classList.remove("selected")); document.getElementById("sel-ctrl").classList.remove("visible"); return; }
   selectedProd = name;
   document.querySelectorAll(".prod-card").forEach(c => { c.classList.remove("selected"); if (c.querySelector(".prod-name") && c.querySelector(".prod-name").innerText === name) c.classList.add("selected"); });
@@ -1031,8 +1135,8 @@ function clearCF() {
   document.getElementById("c-province").value = "";
   document.querySelectorAll("input[name='ship-type']").forEach(r => r.checked = false);
 }
-function addToCart() {
-  if (!selectedProd) { alert("ເລືອກສິນຄ້າກ່ອນ!"); return; }
+async function addToCart() {
+  if (!selectedProd) { await showAlert("ເລືອກສິນຄ້າກ່ອນ!"); return; }
   const q  = parseInt(document.getElementById("sel-qty").value) || 1;
   const d  = parseInt(document.getElementById("sel-disc").value) || 0;
   const nt = document.getElementById("sel-note").value || "";
@@ -1060,7 +1164,7 @@ function removeCart(i) { cart.splice(i, 1); renderCart(); }
 function editCart(i) { const it = cart[i]; selectProd(it.name, 999); document.getElementById("sel-qty").value = it.qty; document.getElementById("sel-disc").value = it.discount; document.getElementById("sel-note").value = it.note; cart.splice(i, 1); renderCart(); }
 
 async function submitSale() {
-  if (!cart.length) { alert("ຍັງບໍ່ໄດ້ເພີ່ມ!"); return; }
+  if (!cart.length) { await showAlert("ຍັງບໍ່ໄດ້ເພີ່ມ!"); return; }
   const cf = getCF();
   cart.forEach(it => Object.assign(it, { customerName: cf.cName, customerPhone: cf.cPhone, customerAddr: cf.cAddr, shipping: cf.cShip, cod: cf.cCod }));
   const saleTotal = cart.reduce((s, it) => s + (it.qty * it.price - it.discount), 0);
@@ -1069,7 +1173,7 @@ async function submitSale() {
     const res = await api.post("recordBulkSale", { cart });
     cart = []; renderCart(); clearCF(); loadSelect();
     showSuccessPopup(`ລວມ ${fN(saleTotal)} ₭ · ${res.message || ""}`.trim());
-  } catch (e) { alert("❌ " + e.message); }
+  } catch (e) { await showAlert("❌ " + e.message); }
   finally { hideLoading(); }
 }
 
@@ -1181,16 +1285,16 @@ function renderRepBillCards(rows) {
   el.innerHTML = h;
 }
 async function edRepRow(rawDate, name, qty) {
-  const v = prompt(`ຈຳນວນໃໝ່ (${name}):`, qty);
+  const v = await showPrompt(`ຈຳນວນໃໝ່ (${name}):`, qty);
   if (!v) return;
   showLoading("ກຳລັງແກ້ໄຂ...");
-  try { const res = await api.post("editSaleRow", { dateStr: String(rawDate), name, oldQty: qty, newQty: v }); alert(res.message); loadReport(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); }
+  try { const res = await api.post("editSaleRow", { dateStr: String(rawDate), name, oldQty: qty, newQty: v }); await showAlert(res.message); loadReport(); } catch (e) { await showAlert("❌ " + e.message); } finally { hideLoading(); }
 }
 
 // ════════════════════════════════════════
 // STOCK
 // ════════════════════════════════════════
-function previewPImg() { const u = document.getElementById("p-img").value.trim(); if (!u) { alert("ໃສ່ Link!"); return; } document.getElementById("p-img-thumb").src = convertGD(u); document.getElementById("p-img-preview").style.display = "block"; }
+function previewPImg() { const u = document.getElementById("p-img").value.trim(); if (!u) { showAlert("ໃສ່ Link!"); return; } document.getElementById("p-img-thumb").src = convertGD(u); document.getElementById("p-img-preview").style.display = "block"; }
 
 async function loadStk() {
   showLoading("ໂຫຼດສະຕ໋ອກ...");
@@ -1221,15 +1325,15 @@ async function loadStk() {
 
 async function saveP() {
   const n = document.getElementById("p-name").value.trim(), c = document.getElementById("p-cost").value, p = document.getElementById("p-price").value, q = document.getElementById("p-qty").value, img = document.getElementById("p-img").value.trim();
-  if (!n || !q) { alert("ໃສ່ຊື່ ແລະ ຈຳນວນ!"); return; }
+  if (!n || !q) { await showAlert("ໃສ່ຊື່ ແລະ ຈຳນວນ!"); return; }
   showLoading("ກຳລັງບັນທຶກ...");
   try {
     const res = await api.post("saveProduct", { name: n, cost: c, price: p, qty: q, imgUrl: img });
-    alert(res.message);
+    await showAlert(res.message);
     ["p-name","p-cost","p-price","p-qty","p-img"].forEach(id => document.getElementById(id).value = "");
     document.getElementById("p-img-preview").style.display = "none";
     loadStk(); loadSelect();
-  } catch (e) { alert("❌ " + e.message); }
+  } catch (e) { await showAlert("❌ " + e.message); }
   finally { hideLoading(); }
 }
 
@@ -1252,17 +1356,17 @@ function previewModalImg() { const u = document.getElementById("modal-img").valu
 async function submitModalEdit() {
   const n = document.getElementById("modal-name").value.trim(), c = document.getElementById("modal-cost").value, p = document.getElementById("modal-price").value, q = document.getElementById("modal-qty").value, img = document.getElementById("modal-img").value.trim();
   showLoading("ກຳລັງແກ້ໄຂ...");
-  try { const res = await api.post("editProductFull", { oldName: curEditName, newName: n, cost: c, price: p, qty: q, imgUrl: img }); alert(res.message); closeModal("stk-modal"); loadStk(); loadSelect(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); }
+  try { const res = await api.post("editProductFull", { oldName: curEditName, newName: n, cost: c, price: p, qty: q, imgUrl: img }); await showAlert(res.message); closeModal("stk-modal"); loadStk(); loadSelect(); } catch (e) { await showAlert("❌ " + e.message); } finally { hideLoading(); }
 }
 async function submitModalAdd() {
   const qty = document.getElementById("modal-add-qty").value;
-  if (!qty || Number(qty) <= 0) { alert("ໃສ່ຈຳນວນ!"); return; }
+  if (!qty || Number(qty) <= 0) { await showAlert("ໃສ່ຈຳນວນ!"); return; }
   showLoading("ກຳລັງເຕີມ...");
-  try { const res = await api.post("quickAddStock", { name: curEditName, qty }); alert(res.message); closeModal("stk-modal"); loadStk(); loadSelect(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); }
+  try { const res = await api.post("quickAddStock", { name: curEditName, qty }); await showAlert(res.message); closeModal("stk-modal"); loadStk(); loadSelect(); } catch (e) { await showAlert("❌ " + e.message); } finally { hideLoading(); }
 }
 async function submitModalDel() {
   showLoading("ກຳລັງລຶບ...");
-  try { const res = await api.post("deleteProduct", { name: curEditName }); alert(res.message); closeModal("stk-modal"); loadStk(); loadSelect(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); }
+  try { const res = await api.post("deleteProduct", { name: curEditName }); await showAlert(res.message); closeModal("stk-modal"); loadStk(); loadSelect(); } catch (e) { await showAlert("❌ " + e.message); } finally { hideLoading(); }
 }
 
 // ════════════════════════════════════════
@@ -1356,10 +1460,10 @@ function renderHisItems(t) {
     el.innerHTML = h || '<div class="empty-state">ບໍ່ມີຂໍ້ມູນ</div>';
   }
 }
-async function canSale(r) { if (!confirm("ລຶບ?")) return; showLoading("ກຳລັງລຶບ..."); try { const res = await api.post("cancelSaleData", { dateStr: String(r[0]), name: r[1], qty: r[2] }); alert(res.message); loadHis(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
-async function edSale(r)   { const v = prompt("ຈຳນວນໃໝ່:", r[2]); if (!v) return; showLoading("ກຳລັງແກ້ໄຂ..."); try { const res = await api.post("editSaleRow", { dateStr: String(r[0]), name: r[1], oldQty: r[2], newQty: v }); alert(res.message); loadHis(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
-async function canStock(r) { if (!confirm("ລຶບ?")) return; showLoading("ກຳລັງລຶບ..."); try { const res = await api.post("cancelStockRow", { dateStr: String(r[0]), name: r[1], qty: r[2] }); alert(res.message); loadHis(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
-async function edStock(r)  { const v = prompt("ຈຳນວນໃໝ່:", r[2]); if (!v) return; showLoading("ກຳລັງແກ້ໄຂ..."); try { const res = await api.post("editStockRow", { dateStr: String(r[0]), name: r[1], oldQty: r[2], newQty: v }); alert(res.message); loadHis(); } catch (e) { alert("❌ " + e.message); } finally { hideLoading(); } }
+async function canSale(r) { const ok = await showConfirm("ລຶບລາຍການຂາຍນີ້ຖາວອນ?"); if (!ok) return; showLoading("ກຳລັງລຶບ..."); try { const res = await api.post("cancelSaleData", { dateStr: String(r[0]), name: r[1], qty: r[2] }); await showAlert(res.message); loadHis(); } catch (e) { await showAlert("❌ " + e.message); } finally { hideLoading(); } }
+async function edSale(r)   { const v = await showPrompt("ຈຳນວນໃໝ່:", r[2]); if (!v) return; showLoading("ກຳລັງແກ້ໄຂ..."); try { const res = await api.post("editSaleRow", { dateStr: String(r[0]), name: r[1], oldQty: r[2], newQty: v }); await showAlert(res.message); loadHis(); } catch (e) { await showAlert("❌ " + e.message); } finally { hideLoading(); } }
+async function canStock(r) { const ok = await showConfirm("ລຶບປະຫວັດສະຕ໋ອກລາຍການນີ້ຖາວອນ?"); if (!ok) return; showLoading("ກຳລັງລຶບ..."); try { const res = await api.post("cancelStockRow", { dateStr: String(r[0]), name: r[1], qty: r[2] }); await showAlert(res.message); loadHis(); } catch (e) { await showAlert("❌ " + e.message); } finally { hideLoading(); } }
+async function edStock(r)  { const v = await showPrompt("ຈຳນວນໃໝ່:", r[2]); if (!v) return; showLoading("ກຳລັງແກ້ໄຂ..."); try { const res = await api.post("editStockRow", { dateStr: String(r[0]), name: r[1], oldQty: r[2], newQty: v }); await showAlert(res.message); loadHis(); } catch (e) { await showAlert("❌ " + e.message); } finally { hideLoading(); } }
 
 // ════════════════════════════════════════
 // PRINT
@@ -1566,16 +1670,17 @@ async function olApplyStatus(code, statusCode) {
       if (o) o.orderStatus = data.newStatus;
       olRender();
       closeModal("ol-detail-modal");
-      alert("✅ ອັບເດດສະຖານະສຳເລັດ: " + data.newStatus);
+      await showAlert("✅ ອັບເດດສະຖານະສຳເລັດ: " + data.newStatus);
     } else {
-      alert("❌ " + (data && data.message ? data.message : "ອັບເດດບໍ່ສຳເລັດ"));
+      await showAlert("❌ " + (data && data.message ? data.message : "ອັບເດດບໍ່ສຳເລັດ"));
     }
-  } catch (e) { alert("❌ " + e.message); }
+  } catch (e) { await showAlert("❌ " + e.message); }
   finally { hideLoading(); }
 }
 
 async function olDeleteOrder(code) {
-  if (!confirm("ລົບອໍເດີ້ " + code + " ຖາວອນ? ບໍ່ສາມາດກູ້ຄືນໄດ້")) return;
+  const ok = await showConfirm("ລົບອໍເດີ້ " + code + " ຖາວອນ? ບໍ່ສາມາດກູ້ຄືນໄດ້");
+  if (!ok) return;
   showLoading("ກຳລັງລົບ...");
   try {
     const res = await fetch(ONLINE_SCRIPT_URL + "?action=deleteOrder&code=" + encodeURIComponent(code));
@@ -1585,9 +1690,9 @@ async function olDeleteOrder(code) {
       olRender();
       closeModal("ol-detail-modal");
     } else {
-      alert("❌ " + (data && data.message ? data.message : "ລົບບໍ່ສຳເລັດ"));
+      await showAlert("❌ " + (data && data.message ? data.message : "ລົບບໍ່ສຳເລັດ"));
     }
-  } catch (e) { alert("❌ " + e.message); }
+  } catch (e) { await showAlert("❌ " + e.message); }
   finally { hideLoading(); }
 }
 
@@ -1598,10 +1703,10 @@ function olTriggerShipBillUpload(code) {
   inp.value = "";
   inp.click();
 }
-function olHandleShipBillFile(input) {
+async function olHandleShipBillFile(input) {
   const file = input.files[0];
   if (!file || !olShipBillTargetCode) return;
-  if (file.size > 6 * 1024 * 1024) { alert("ຮູບໃຫຍ່ເກີນໄປ (≤ 6MB)"); return; }
+  if (file.size > 6 * 1024 * 1024) { await showAlert("ຮູບໃຫຍ່ເກີນໄປ (≤ 6MB)"); return; }
   const reader = new FileReader();
   reader.onload = (e) => {
     const img = new Image();
@@ -1632,7 +1737,7 @@ async function olUploadShipBill(code, base64) {
       hideLoading();
       if (document.getElementById("ol-detail-modal").classList.contains("open")) olOpenDetail(code);
     }, 1300);
-  } catch (e) { hideLoading(); alert("❌ " + e.message); }
+  } catch (e) { hideLoading(); await showAlert("❌ " + e.message); }
 }
 </script>
 </body>
