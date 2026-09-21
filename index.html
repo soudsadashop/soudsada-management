@@ -284,6 +284,11 @@
     .ol-status-choice{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1.5px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:12px;font-weight:bold;}
     .ol-status-choice.ol-current{border-color:var(--primary);background:rgba(var(--primary-rgb),.06);}
     .ol-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+    /* ★ ບາໂຄດອໍເດີ້ ໃນລາຍລະອຽດບິນ (ພື້ນຂາວສະເໝີ ເພື່ອໃຫ້ສະແກນໄດ້ ເຖິງຈະເປີດ Dark Mode) */
+    .ol-barcode-box{background:#fff;border:1.5px solid rgba(var(--primary-rgb),.35);border-radius:10px;padding:10px 8px 8px;text-align:center;margin-bottom:10px;}
+    .ol-barcode-lbl{font-size:10px;color:#888;font-weight:bold;margin-bottom:6px;}
+    .ol-barcode-box img{display:block;width:100%;max-width:360px;height:auto;margin:0 auto;}
+    .ol-barcode-code{font-family:monospace;font-weight:bold;font-size:16px;letter-spacing:1.5px;color:#1a1a1a;margin-top:4px;}
 
     /* SPINNER OVERLAY */
     #api-loading{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:9998;display:none;align-items:center;justify-content:center;}
@@ -1513,6 +1518,56 @@ function olWaLink(rawPhone) {
   return "https://wa.me/" + p;
 }
 
+// ────────────────────────────────────────
+// ★ ບາໂຄດອໍເດີ້ (Code 128 Subset B) — ໃຊ້ຮູບແບບດຽວກັບໃບບິນທີ່ລູກຄ້າໄດ້ຮັບ
+//   ຂຽນຕົວເຂົ້າລະຫັດເອງ ບໍ່ຕ້ອງໃຊ້ຫ້ອງສະໝຸດ. ຮອງຮັບ ASCII 32-126 (A-Z, 0-9, ຂີດ -)
+// ────────────────────────────────────────
+const OL_CODE128 = ['212222','222122','222221','121223','121322','131222','122213','122312','132212','221213','221312','231212','112232','122132','122231','113222','123122','123221','223211','221132','221231','213212','223112','312131','311222','321122','321221','312212','322112','322211','212123','212321','232121','111323','131123','131321','112313','132113','132311','211313','231113','231311','112133','112331','132131','113123','113321','133121','313121','211331','231131','213113','213311','213131','311123','311321','331121','312113','312311','332111','314111','221411','431111','111224','111422','121124','121421','141122','141221','112214','112412','122114','122411','142112','142211','241211','221114','413111','241112','134111','111242','121142','121241','114212','124112','124211','411212','421112','421211','212141','214121','412121','111143','111341','131141','114113','114311','411113','411311','113141','114131','311141','411131','211412','211214','211232','2331112'];
+
+function olCode128Encode(text) {
+  const vals = [104]; let sum = 104;              // 104 = Start B
+  for (let i = 0; i < text.length; i++) {
+    const c = text.charCodeAt(i);
+    if (c < 32 || c > 126) return null;
+    const v = c - 32; vals.push(v); sum += v * (i + 1);
+  }
+  vals.push(sum % 103);                            // ຕົວກວດສອບ (checksum)
+  vals.push(106);                                  // Stop
+  return vals.map(v => OL_CODE128[v]).join("");
+}
+
+// ສ້າງຮູບບາໂຄດ (PNG data URL) — ເສັ້ນກວ້າງເປັນຈຳນວນເຕັມພິກເຊວ ຈຶ່ງຄົມຊັດ ແລະ ສະແກນໄດ້
+function olBarcodeDataUrl(text) {
+  const pat = olCode128Encode(String(text || ""));
+  if (!pat) return "";
+  const quiet = 10, mp = 6, h = 200;
+  let total = 0;
+  for (let i = 0; i < pat.length; i++) total += +pat.charAt(i);
+  const c = document.createElement("canvas");
+  c.width = (total + quiet * 2) * mp; c.height = h;
+  const x = c.getContext("2d");
+  x.fillStyle = "#ffffff"; x.fillRect(0, 0, c.width, h);
+  x.fillStyle = "#0F172A";
+  let pos = quiet * mp;
+  for (let i = 0; i < pat.length; i++) {
+    const w = (+pat.charAt(i)) * mp;
+    if (i % 2 === 0) x.fillRect(pos, 0, w, h);
+    pos += w;
+  }
+  return c.toDataURL("image/png");
+}
+
+// ວັນທີ-ເວລາສັ່ງຊື້ ໃຫ້ອ່ານງ່າຍ (ຈາກ "Sun Sep 20 2026 12:40:00 GMT+0700 (...)" → "20/09/2026 12:40:00")
+function olFmtDate(s) {
+  if (!s) return "";
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return String(s);
+  const o = {};
+  new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Vientiane", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false })
+    .formatToParts(d).forEach(p => o[p.type] = p.value);
+  return `${o.day}/${o.month}/${o.year} ${o.hour}:${o.minute}:${o.second}`;
+}
+
 async function loadOnlineOrders() {
   document.getElementById("ol-list").innerHTML = '<div class="loading-state">⏳ ກຳລັງໂຫຼດ...</div>';
   try {
@@ -1583,7 +1638,7 @@ function olRender() {
     const cfg = olStatusCfg(o.orderStatus);
     h += `<div class="ol-card" onclick="olOpenDetail('${o.code}')">
       <div class="ol-top">
-        <div><span class="ol-code">📦 ${o.code}</span><div class="ol-time">⏰ ${o.submittedAt||""}</div></div>
+        <div><span class="ol-code">📦 ${o.code}</span><div class="ol-time">⏰ ${olFmtDate(o.submittedAt)}</div></div>
         <div class="ol-total">${fN(o.totalAmount)}₭</div>
       </div>
       <div class="ol-cust">${o.customerName||"ບໍ່ລະບຸ"}${o.customerPhone?" · 020 "+o.customerPhone:""}</div>
@@ -1604,10 +1659,16 @@ function olOpenDetail(code) {
   const rows = [
     ["👤 ຊື່ລູກຄ້າ", o.customerName], ["📱 ເບີໂທ", "020 " + o.customerPhone],
     ["📍 ທີ່ຢູ່", o.customerAddr], ["🚚 ຂົນສົ່ງ", o.shipping], ["💳 ການຊຳລະ", o.payment],
-    ["💰 ລວມທັງໝົດ", fN(o.totalAmount) + " ₭"], ["📅 ວັນທີສັ່ງ", o.submittedAt], ["🔖 ສະຖານະ", cfg.icon + " " + o.orderStatus]
+    ["💰 ລວມທັງໝົດ", fN(o.totalAmount) + " ₭"], ["📅 ວັນທີສັ່ງ", olFmtDate(o.submittedAt)], ["🔖 ສະຖານະ", cfg.icon + " " + o.orderStatus]
   ].filter(r => r[1]);
 
-  let h = `<div style="background:rgba(var(--primary-rgb),.05);border-radius:8px;padding:10px;margin-bottom:10px">`;
+  // ★ ບາໂຄດ + ເລກລະຫັດອໍເດີ້ (ຢູ່ເທິງສຸດຂອງລາຍລະອຽດບິນ)
+  const bcUrl = olBarcodeDataUrl(o.code);
+  let h = bcUrl
+    ? `<div class="ol-barcode-box"><div class="ol-barcode-lbl">📊 ບາໂຄດອໍເດີ້</div><img src="${bcUrl}" alt="barcode ${escHtmlOl(o.code)}"><div class="ol-barcode-code">${escHtmlOl(o.code)}</div></div>`
+    : "";
+
+  h += `<div style="background:rgba(var(--primary-rgb),.05);border-radius:8px;padding:10px;margin-bottom:10px">`;
   rows.forEach(r => { h += `<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px dashed var(--border)"><span style="color:var(--text-sub)">${r[0]}</span><b>${escHtmlOl(String(r[1]))}</b></div>`; });
   h += `</div>`;
 
