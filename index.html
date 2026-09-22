@@ -130,6 +130,8 @@
     .check-badge{position:absolute;top:3px;right:3px;background:var(--primary);color:white;border-radius:50%;width:14px;height:14px;font-size:9px;display:none;align-items:center;justify-content:center;}
     .prod-card.selected .check-badge{display:flex;}
     .prod-card.out-of-stock{opacity:.4;cursor:not-allowed;}
+    .qty-badge2{position:absolute;top:3px;left:3px;background:var(--danger);color:white;border-radius:9px;min-width:14px;height:14px;padding:0 3px;font-size:9px;font-weight:bold;display:none;align-items:center;justify-content:center;}
+    .prod-card.selected .qty-badge2{display:flex;}
     .sale-right{width:48%;display:flex;flex-direction:column;overflow:hidden;}
     .sale-right-scroll{flex:1;overflow-y:auto;padding:8px;}
     .cust-section{background:var(--card-bg);border:1.5px solid rgba(var(--primary-rgb),.2);border-radius:var(--radius-md);padding:10px;margin-bottom:8px;}
@@ -138,7 +140,9 @@
     .irow input,.irow select{margin:3px 0;font-size:12px;padding:7px 8px;}
     .ship-row{display:flex;gap:4px;flex-wrap:wrap;align-items:center;background:rgba(var(--primary-rgb),.05);border:1px solid rgba(var(--primary-rgb),.18);border-radius:6px;padding:6px 7px;margin:4px 0;}
     .ship-lbl{font-size:10px;color:var(--primary);font-weight:bold;width:100%;margin-bottom:3px;}
-    .ship-opt{display:flex;align-items:center;gap:3px;background:var(--card-bg);border:1px solid var(--border);border-radius:5px;padding:4px 7px;font-size:11px;cursor:pointer;}
+    .ship-opt{display:flex;align-items:center;gap:4px;background:var(--card-bg);border:1px solid var(--border);border-radius:5px;padding:4px 7px;font-size:11px;cursor:pointer;}
+    .ship-ico-pos{font-size:13px;line-height:1;}
+    .ship-logo-pos{width:18px;height:18px;object-fit:contain;border-radius:4px;background:#fff;flex-shrink:0;display:block;}
     .ship-opt input{width:auto;margin:0;}
     .ship-branch{flex:1;min-width:80px;padding:5px 7px!important;margin:0!important;font-size:11px!important;}
     .sel-ctrl{background:var(--card-bg);border:2px solid var(--primary);border-radius:var(--radius-md);padding:9px;margin-bottom:8px;display:none;animation:fadeIn .2s;}
@@ -149,7 +153,10 @@
     .stock-out{color:var(--danger);font-weight:bold;}
     .cart-box{background:var(--card-bg);border-radius:var(--radius-md);padding:9px;border:1px solid var(--border);}
     .cart-box h4{font-size:12px;color:var(--primary);margin:0 0 7px;border-bottom:1px solid var(--border);padding-bottom:5px;}
-    .cart-item{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border);}
+    .cart-item{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border);gap:6px;}
+    .cart-qty-ctrl{display:flex;align-items:center;gap:5px;margin-top:4px;}
+    .cart-qty-btn2{width:20px;height:20px;background:rgba(var(--primary-rgb),.12);border:1px solid var(--border);border-radius:5px;font-size:13px;font-weight:bold;color:var(--primary);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .cart-qty-btn2:active{transform:scale(.9);}
     .cart-item:last-child{border-bottom:none;}
     .cart-total{text-align:right;font-weight:bold;font-size:15px;margin:7px 0;color:var(--primary);}
     .cart-acts{display:flex;gap:5px;margin-top:6px;}
@@ -172,8 +179,13 @@
     .prod-sum-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px;}
     .prod-sum-table th{background:rgba(var(--primary-rgb),.12);color:var(--primary);padding:6px 5px;text-align:left;font-size:10px;font-weight:700;}
     .prod-sum-table td{padding:6px 5px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    .psum-name-cell{display:flex;align-items:center;gap:6px;}
+    .psum-thumb{width:24px;height:24px;object-fit:cover;border-radius:5px;background:#f0f0f0;flex-shrink:0;}
+    .rbi-thumb{width:26px;height:26px;object-fit:cover;border-radius:5px;background:#f0f0f0;flex-shrink:0;}
+    .bd-thumb{width:36px;height:36px;object-fit:cover;border-radius:7px;background:#f0f0f0;flex-shrink:0;}
     .prod-sum-table .total-row td{font-weight:bold;color:var(--primary);background:rgba(var(--primary-rgb),.05);}
-    .rep-bill-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+    .rep-bill-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.04);cursor:pointer;transition:box-shadow .15s,background .15s;}
+    .rep-bill-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.09);background:rgba(var(--primary-rgb),.03);}
     .rep-bill-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
     .rep-bill-time{font-size:10px;color:var(--text-sub);}
     .rep-bill-cust{font-weight:bold;font-size:13px;}
@@ -448,10 +460,11 @@
             </div>
             <div class="ship-row">
               <div class="ship-lbl">🚚 ຂົນສົ່ງ</div>
-              <label class="ship-opt"><input type="radio" name="ship-type" value="Ans"> Ans</label>
-              <label class="ship-opt"><input type="radio" name="ship-type" value="Hal"> Hal</label>
-              <label class="ship-opt"><input type="radio" name="ship-type" value="Mx"> Mx</label>
-               <label class="ship-opt"><input type="radio" name="ship-type" value="JT"> J&T</label>
+              <!-- ★ ໂລໂກ້ຂົນສົ່ງ — ແຕ່ລະ label ມີ <span class="ship-ico-pos"> (emoji ສຳຮອງ), ຈະຖືກແທນດ້ວຍຮູບໂລໂກ້ໂດຍ applyPOSShipLogos() -->
+              <label class="ship-opt" data-ship="Ans"><input type="radio" name="ship-type" value="Ans"><span class="ship-ico-pos">🏍</span> Ans</label>
+              <label class="ship-opt" data-ship="Hal"><input type="radio" name="ship-type" value="Hal"><span class="ship-ico-pos">🚌</span> Hal</label>
+              <label class="ship-opt" data-ship="Mx"><input type="radio" name="ship-type" value="Mx"><span class="ship-ico-pos">🚚</span> Mx</label>
+              <label class="ship-opt" data-ship="JT"><input type="radio" name="ship-type" value="JT"><span class="ship-ico-pos">🚛</span> J&T</label>
               <input type="text" id="c-ship-branch" class="ship-branch" placeholder="ສາຂາ">
             </div>
             <input type="text" id="c-cod" placeholder="💵 COD (ກີບ)" style="font-size:11px;padding:6px 9px;margin-top:3px;">
@@ -464,7 +477,10 @@
               <input type="number" id="sel-disc" value="" placeholder="ສ່ວນຫຼຸດ">
             </div>
             <input type="text" id="sel-note" placeholder="ໝາຍເຫດ">
-            <button class="btn btn-sec" style="margin-top:6px" onclick="addToCart()">+ ເພີ່ມລົງລາຍການ</button>
+            <div style="display:flex;gap:6px;margin-top:6px">
+              <button class="btn btn-gray" style="flex:1" onclick="cancelEditSelCtrl()">❌ ຍົກເລີກ</button>
+              <button class="btn btn-sec" style="flex:2" onclick="addToCart()">✅ ບັນທຶກ</button>
+            </div>
           </div>
           <div class="cart-box" id="cart-box" style="display:none">
             <h4>📝 ລາຍການຂາຍ</h4>
@@ -767,6 +783,9 @@ document.addEventListener("DOMContentLoaded", () => {
 // ════════════════════════════════════════
 let cart = [], allProds = [], hisData = { sales: [], logs: [] }, curH = 1;
 let selectedProd = null;
+let editingOriginal = null;      // ★ ຄ່າເດີມຂອງລາຍການທີ່ກຳລັງແກ້ (ໃຊ້ຄືນຄ່າຖ້າກົດຍົກເລີກ)
+let prodImgMap = {};             // ★ ຊື່ສິນຄ້າ → ຮູບ (ໃຊ້ໂຊຮູບຄູ່ກັບຊື່ໃນສະຫຼຸບ/ລາຍລະອຽດບິນ)
+let repBillGroupsList = [];      // ★ ລາຍການບິນ (ຈາກ renderRepBillCards) ໃຊ້ອ້າງອີງເມື່ອກົດເບິ່ງລາຍລະອຽດ
 let curEditName = "";
 let hisAll = { sales: [], logs: [] };
 let allRepRows = [], filteredRepRows = [];
@@ -890,6 +909,7 @@ function showPrompt(msg, defaultVal, title) {
 // ════════════════════════════════════════
 function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 function openModal(id)  { document.getElementById(id).classList.add("open"); }
+function escAttr(s) { return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
 // ════════════════════════════════════════
 // INIT APP
@@ -902,6 +922,29 @@ function initApp() {
   applyStoredSettings();
   loadSelect();
   loadBannerSettingsFromAPI();
+  applyPOSShipLogos();
+}
+
+// ★ ໂລໂກ້ຂົນສົ່ງ — ໃຊ້ຮູບດຽວກັບໜ້າຮ້ານອອນລາຍ (ອານຸສິດ/ຮຸ່ງອາລຸນ/ມີໄຊ/J&T)
+// ຖ້າຂົນສົ່ງ Ans/Hal/Mx ໃນລະບົບຫຼັງບ້ານນີ້ບໍ່ແມ່ນຂົນສົ່ງດຽວກັນກັບໜ້າຮ້ານ ໃຫ້ແກ້ລິງທີ່ນີ້ໄດ້ໂດຍກົງ
+var POS_SHIP_LOGOS = {
+  'Ans': 'https://drive.google.com/file/d/16CDSIz65rT_LnT6_6jxS2aJ66PbM4bnM/view?usp=sharing',
+  'Hal': 'https://drive.google.com/file/d/1A-zoLK6FSKegn63LZetDWKeGPz2ouX6P/view?usp=sharing',
+  'Mx':  'https://drive.google.com/file/d/1Pn6pW-XmRflueq1uTPrmPPQDGD1835li/view?usp=sharing',
+  'JT':  'https://drive.google.com/file/d/1-rNqUelgGOYMcfYtGRaG6N-dc852JjID/view?usp=sharing'
+};
+function applyPOSShipLogos() {
+  document.querySelectorAll(".ship-opt[data-ship]").forEach(label => {
+    const val = label.dataset.ship;
+    const url = POS_SHIP_LOGOS[val];
+    const ico = label.querySelector(".ship-ico-pos");
+    if (!url || !ico) return;
+    const img = new Image();
+    img.className = "ship-logo-pos";
+    img.alt = val;
+    img.onload = () => { if (ico.parentNode) ico.replaceWith(img); };
+    img.src = convertGD(url);
+  });
 }
 
 function nav(p, el) {
@@ -1081,10 +1124,16 @@ async function loadSelect() {
   showLoading("ໂຫຼດສິນຄ້າ...");
   try {
     allProds = await api.get("getProducts");
+    buildProdImgMap();
     renderProdGrid(allProds);
   } catch (e) {
     document.getElementById("prod-grid").innerHTML = `<div class="empty-state">❌ ${e.message}</div>`;
   } finally { hideLoading(); }
+}
+// ★ ແຜນທີ່ ຊື່ສິນຄ້າ → ຮູບ (ໃຊ້ໂຊຮູບຄູ່ຊື່ສິນຄ້າໃນໜ້າສະຫຼຸບ/ລາຍລະອຽດບິນ)
+function buildProdImgMap() {
+  prodImgMap = {};
+  (allProds || []).forEach(p => { prodImgMap[p.name] = p.img ? convertGD(p.img) : ""; });
 }
 function filterProd() {
   const q = document.getElementById("prod-search").value.toLowerCase().trim();
@@ -1099,8 +1148,9 @@ function renderProdGrid(prods) {
     const isOut = qty <= 0;
     const sBadge = isOut ? '<span class="stock-out" style="font-size:8px">🚨ໝົດ</span>' : qty <= 5 ? `<span class="stock-low" style="font-size:8px">⚠️${qty}</span>` : `<span class="stock-ok" style="font-size:8px">✅${qty}</span>`;
     const sn = name.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-    h += `<div class="prod-card${isOut?" out-of-stock":""}" onclick="selectProd('${sn}',${qty})">
+    h += `<div class="prod-card${isOut?" out-of-stock":""}" data-name="${escAttr(name)}" onclick="selectProd('${sn}',${qty})">
       <div class="check-badge">✓</div>
+      <div class="qty-badge2"></div>
       <img src="${img||noImg}" alt="${name}" loading="lazy" onerror="this.src='${noImg}'">
       <div class="prod-name">${name}</div>
       <div class="prod-price">${fN(price)}₭</div>
@@ -1108,19 +1158,37 @@ function renderProdGrid(prods) {
     </div>`;
   });
   grid.innerHTML = h;
-  if (selectedProd) document.querySelectorAll(".prod-card").forEach(c => { if (c.querySelector(".prod-name") && c.querySelector(".prod-name").innerText === selectedProd) c.classList.add("selected"); });
+  refreshProdCardTicks();
 }
+// ★ ໝາຍ ✓ + ໂຕເລກຈຳນວນ ເທິງບັດສິນຄ້າ ຕາມສະຖານະປັດຈຸບັນຂອງ cart (ຕິກເລືອກໄດ້ຫຼາຍລາຍການ)
+function refreshProdCardTicks() {
+  document.querySelectorAll("#prod-grid .prod-card[data-name]").forEach(card => {
+    const nm = card.dataset.name;
+    const ci = cart.find(c => c.name === nm);
+    card.classList.toggle("selected", !!ci);
+    const qb = card.querySelector(".qty-badge2");
+    if (qb) qb.innerText = ci ? ci.qty : "";
+  });
+}
+// ★ ຕິກເລືອກສິນຄ້າໄດ້ຫຼາຍລາຍການ — ກົດບັດສິນຄ້າ 1 ຄັ້ງ = ຕິກ+ໃສ່ລາຍການ 1 ຊິ້ນ, ກົດອີກຄັ້ງ = ເອົາອອກ
+// (ສິນຄ້າທີ່ຖືກແກ້ໄຂຢູ່ໃນ sel-ctrl ຈະບໍ່ຖືກຕິກ/ເອົາອອກຊໍ້າ)
 async function selectProd(name, qty) {
   if (qty <= 0) { await showAlert("⚠️ ສິນຄ້ານີ້ໝົດ!"); return; }
-  if (selectedProd === name) { selectedProd = null; document.querySelectorAll(".prod-card").forEach(c => c.classList.remove("selected")); document.getElementById("sel-ctrl").classList.remove("visible"); return; }
-  selectedProd = name;
-  document.querySelectorAll(".prod-card").forEach(c => { c.classList.remove("selected"); if (c.querySelector(".prod-name") && c.querySelector(".prod-name").innerText === name) c.classList.add("selected"); });
-  document.getElementById("sel-pname").innerText = "🛍️ " + name;
-  document.getElementById("sel-qty").value = 1; document.getElementById("sel-disc").value = ""; document.getElementById("sel-note").value = "";
-  const bd = document.getElementById("stock-badge");
-  bd.innerHTML = qty <= 5 ? `<span class="stock-low">⚠️ ຄົງ ${qty} ຊິ້ນ</span>` : `<span class="stock-ok">✅ ຄົງ ${qty} ຊິ້ນ</span>`;
-  document.getElementById("sel-ctrl").classList.add("visible");
-  document.getElementById("sel-ctrl").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  if (selectedProd === name) return; // ກຳລັງແກ້ໄຂລາຍການນີ້ຢູ່ໃນ sel-ctrl — ບໍ່ໃຫ້ຕິກ/ຖອນຊໍ້າຊ້ອນ
+  const idx = cart.findIndex(c => c.name === name);
+  if (idx >= 0) { cart.splice(idx, 1); renderCart(); return; }
+  const p = allProds.find(x => x.name === name); if (!p) return;
+  const cf = getCF();
+  cart.push({ name, qty: 1, price: Number(p.price) || 0, discount: 0, note: "", customerName: cf.cName, customerPhone: cf.cPhone, customerAddr: cf.cAddr, shipping: cf.cShip, cod: cf.cCod });
+  renderCart();
+  flashCartBox();
+}
+function flashCartBox() {
+  const cb = document.getElementById("cart-box");
+  if (!cb) return;
+  cb.style.transition = "box-shadow .2s";
+  cb.style.boxShadow = "0 0 0 3px rgba(var(--primary-rgb),.4)";
+  setTimeout(() => { cb.style.boxShadow = ""; }, 550);
 }
 function getCF() {
   const prov = document.getElementById("c-province").value.trim();
@@ -1140,17 +1208,24 @@ function clearCF() {
   document.getElementById("c-province").value = "";
   document.querySelectorAll("input[name='ship-type']").forEach(r => r.checked = false);
 }
+// ★ ໃຊ້ໂດຍ sel-ctrl ຕອນ "ແກ້" ລາຍການໃນກະຕ່າເທົ່ານັ້ນ (ບໍ່ໄດ້ໃຊ້ຕອນຕິກເລືອກໃໝ່ອີກຕໍ່ໄປ — ນັ້ນເຮັດຜ່ານ selectProd)
 async function addToCart() {
-  if (!selectedProd) { await showAlert("ເລືອກສິນຄ້າກ່ອນ!"); return; }
+  if (!selectedProd) { await showAlert("ບໍ່ມີລາຍການທີ່ກຳລັງແກ້ໄຂ!"); return; }
   const q  = parseInt(document.getElementById("sel-qty").value) || 1;
   const d  = parseInt(document.getElementById("sel-disc").value) || 0;
   const nt = document.getElementById("sel-note").value || "";
   const p  = allProds.find(x => x.name === selectedProd); if (!p) return;
   const cf = getCF();
   cart.push({ name: selectedProd, qty: q, price: Number(p.price)||0, discount: d, note: nt, customerName: cf.cName, customerPhone: cf.cPhone, customerAddr: cf.cAddr, shipping: cf.cShip, cod: cf.cCod });
-  renderCart();
+  editingOriginal = null;
   selectedProd = null;
-  document.querySelectorAll(".prod-card").forEach(c => c.classList.remove("selected"));
+  document.getElementById("sel-ctrl").classList.remove("visible");
+  renderCart();
+}
+// ★ ຍົກເລີກການແກ້ໄຂ — ຄືນຄ່າເດີມຂອງລາຍການນັ້ນກັບເຂົ້າກະຕ່າ ບໍ່ໃຫ້ເສຍລາຍການໄປ
+function cancelEditSelCtrl() {
+  if (editingOriginal) { cart.push(editingOriginal); editingOriginal = null; renderCart(); }
+  selectedProd = null;
   document.getElementById("sel-ctrl").classList.remove("visible");
 }
 function renderCart() {
@@ -1158,15 +1233,57 @@ function renderCart() {
   const list = document.getElementById("cart-list"); let total = 0; list.innerHTML = "";
   cart.forEach((item, i) => {
     const sub = (item.qty * item.price) - item.discount; total += sub;
+    const prod = allProds.find(p => p.name === item.name);
+    const img = prodImgMap[item.name] || noImg;
     list.innerHTML += `<div class="cart-item">
-      <div><b style="font-size:12px">${item.name}</b><br><small style="color:var(--text-sub)">${item.qty}×${fN(item.price)}${item.discount?" -"+item.discount:""}</small>${item.note?`<br><small style="color:#aaa">${item.note}</small>`:""}</div>
-      <div class="action-btns" style="align-items:center"><b style="font-size:12px;color:var(--primary)">${fN(sub)}₭</b><button class="btn-act bg-warn" onclick="editCart(${i})">ແກ້</button><button class="btn-act bg-dang" onclick="removeCart(${i})">ລົບ</button></div>
+      <img src="${img}" onerror="this.src='${noImg}'" style="width:36px;height:36px;object-fit:cover;border-radius:7px;background:#f0f0f0;flex-shrink:0">
+      <div style="flex:1;min-width:0">
+        <b style="font-size:12px">${item.name}</b><br>
+        <small style="color:var(--text-sub)">${fN(item.price)}₭${item.discount?" · ຫຼຸດ "+fN(item.discount)+"₭":""}</small>
+        ${item.note?`<br><small style="color:#aaa">📝 ${item.note}</small>`:""}
+        <div class="cart-qty-ctrl">
+          <button class="cart-qty-btn2" onclick="cartQtyPOS(${i},-1)">−</button>
+          <span style="font-size:12px;font-weight:bold;min-width:16px;text-align:center">${item.qty}</span>
+          <button class="cart-qty-btn2" onclick="cartQtyPOS(${i},1)">+</button>
+        </div>
+      </div>
+      <div class="action-btns" style="align-items:flex-end;flex-direction:column;gap:4px">
+        <b style="font-size:12px;color:var(--primary);white-space:nowrap">${fN(sub)}₭</b>
+        <div style="display:flex;gap:3px"><button class="btn-act bg-warn" onclick="editCart(${i})">ແກ້</button><button class="btn-act bg-dang" onclick="removeCart(${i})">ລົບ</button></div>
+      </div>
     </div>`;
   });
   document.getElementById("cart-total").innerText = fN(total);
+  refreshProdCardTicks();
+}
+// ★ ປັບຈຳນວນໂດຍກົງໃນແຖບ "ລາຍການທີ່ເລືອກ" — ຈຳກັດຕາມສະຕ໋ອກທີ່ເຫຼືອ
+async function cartQtyPOS(i, d) {
+  const item = cart[i]; if (!item) return;
+  const prod = allProds.find(p => p.name === item.name);
+  const maxQ = prod ? (Number(prod.qty) || 1) : 999;
+  if (d > 0 && item.qty >= maxQ) { await showAlert(`ສິນຄ້ານີ້ເຫຼືອພຽງ ${maxQ} ຊິ້ນ`); return; }
+  item.qty = Math.max(1, item.qty + d);
+  renderCart();
 }
 function removeCart(i) { cart.splice(i, 1); renderCart(); }
-function editCart(i) { const it = cart[i]; selectProd(it.name, 999); document.getElementById("sel-qty").value = it.qty; document.getElementById("sel-disc").value = it.discount; document.getElementById("sel-note").value = it.note; cart.splice(i, 1); renderCart(); }
+// ★ ແກ້ຈຳນວນ/ສ່ວນຫຼຸດ/ໝາຍເຫດ ຂອງລາຍການໜຶ່ງໃນກະຕ່າ — ດຶງອອກມາໃສ່ sel-ctrl ຊົ່ວຄາວ, ກົດ "ບັນທຶກ" ຫຼື "ຍົກເລີກ" ຄືນ
+function editCart(i) {
+  const it = cart[i]; if (!it) return;
+  const p = allProds.find(x => x.name === it.name);
+  const stockQty = p ? Number(p.qty) : 999;
+  editingOriginal = JSON.parse(JSON.stringify(it));
+  selectedProd = it.name;
+  document.getElementById("sel-pname").innerText = "✏️ " + it.name;
+  document.getElementById("sel-qty").value = it.qty;
+  document.getElementById("sel-disc").value = it.discount || "";
+  document.getElementById("sel-note").value = it.note || "";
+  const bd = document.getElementById("stock-badge");
+  bd.innerHTML = stockQty <= 5 ? `<span class="stock-low">⚠️ ຄົງ ${stockQty} ຊິ້ນ</span>` : `<span class="stock-ok">✅ ຄົງ ${stockQty} ຊິ້ນ</span>`;
+  document.getElementById("sel-ctrl").classList.add("visible");
+  document.getElementById("sel-ctrl").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  cart.splice(i, 1);
+  renderCart();
+}
 
 async function submitSale() {
   if (!cart.length) { await showAlert("ຍັງບໍ່ໄດ້ເພີ່ມ!"); return; }
@@ -1205,7 +1322,11 @@ function setRepRange(range) {
 async function loadReport() {
   document.getElementById("rep-bills").innerHTML = '<div class="loading-state">⏳ ກຳລັງໂຫຼດ...</div>';
   showLoading("ໂຫຼດລາຍງານ...");
-  try { allRepRows = await api.get("getReport"); applyRepFilter(); }
+  try {
+    if (!allProds.length) { allProds = await api.get("getProducts"); buildProdImgMap(); }
+    allRepRows = await api.get("getReport");
+    applyRepFilter();
+  }
   catch (e) { document.getElementById("rep-bills").innerHTML = `<div class="empty-state">❌ ${e.message}</div>`; }
   finally { hideLoading(); }
 }
@@ -1243,7 +1364,8 @@ function renderRepProdTable() {
   let tQ = 0, tS = 0, tC = 0, tP = 0;
   keys.forEach((k, idx) => {
     tQ += m[k].qty; tS += m[k].sales; tC += m[k].cost; tP += m[k].profit;
-    h += `<tr><td style="color:var(--text-sub)">${idx+1}</td><td><b>${k}</b></td><td>${m[k].qty}</td><td>${fN(m[k].cost)}</td><td style="color:var(--blue);font-weight:bold">${fN(m[k].sales)}</td><td style="color:var(--secondary);font-weight:bold">${fN(m[k].profit)}</td></tr>`;
+    const timg = prodImgMap[k] || noImg;
+    h += `<tr><td style="color:var(--text-sub)">${idx+1}</td><td><div class="psum-name-cell"><img class="psum-thumb" src="${timg}" onerror="this.src='${noImg}'"><b>${k}</b></div></td><td>${m[k].qty}</td><td>${fN(m[k].cost)}</td><td style="color:var(--blue);font-weight:bold">${fN(m[k].sales)}</td><td style="color:var(--secondary);font-weight:bold">${fN(m[k].profit)}</td></tr>`;
   });
   h += `<tr class="total-row"><td colspan="2">ລວມ</td><td>${tQ}</td><td>${fN(tC)}</td><td>${fN(tS)}</td><td>${fN(tP)}</td></tr>`;
   document.getElementById("rep-prod-table").innerHTML = h + "</table>";
