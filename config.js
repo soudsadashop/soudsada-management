@@ -3,6 +3,7 @@
 // ✏️  ປ່ຽນ API_URL ຂ້າງລຸ່ມໃຫ້ຕົງກັບ Web App URL ທີ່ Deploy ແລ້ວ
 // ================================================================
 const API_URL = "https://script.google.com/macros/s/AKfycbwnVtsLgjjZ6mC-nUBKPwfmVQGUyWY3yw1yFg1nGhQ3MII_HwJtsm8JP6LmGMGOWjM/exec";
+
 // ================================================================
 // API Client — ຟັງຊັນ wrapper ສຳລັບ GET ແລະ POST
 // ================================================================
@@ -25,6 +26,7 @@ const api = {
     if (!json.success) throw new Error(json.error || "API error");
     return json.data !== undefined ? json.data : json;
   },
+
   /**
    * POST request (JSON body)
    * @param {string} action
@@ -44,11 +46,13 @@ const api = {
     return json;
   },
 };
+
 // ================================================================
 // Utility helpers (ໃຊ້ຮ່ວມກັນທຸກໜ້າ)
 // ================================================================
 function pad2(n) { return String(n).padStart(2, "0"); }
 function fN(n) { return Number(n || 0).toLocaleString(); }
+
 function toYMD(d) {
   if (!d) return "";
   const s = String(d).trim();
@@ -57,12 +61,14 @@ function toYMD(d) {
   if (!isNaN(dt)) return `${dt.getFullYear()}-${pad2(dt.getMonth() + 1)}-${pad2(dt.getDate())}`;
   return "";
 }
+
 function fmtDT(d) {
   const ymd = toYMD(d);
   if (!ymd) return "-";
   const [y, m, day] = ymd.split("-");
   return `${day}/${m}/${y}`;
 }
+
 function fmtDTFull(d) {
   if (!d) return "-";
   const s = String(d).trim();
@@ -73,9 +79,11 @@ function fmtDTFull(d) {
   }
   return fmtDT(s);
 }
+
+// ★ ແກ້ແລ້ວ: ປ່ຽນຄ່າເປັນ string ກ່ອນ trim ສະເໝີ (ກັນ error "url.trim is not a function")
 function convertGD(url) {
-  if (!url || !url.trim()) return "";
-  url = url.trim();
+  url = String(url ?? "").trim();
+  if (!url) return "";
   if (url.includes("drive.google.com/uc") || url.includes("drive.google.com/thumbnail")) return url;
   const m = url.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
   if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w300`;
@@ -83,7 +91,9 @@ function convertGD(url) {
   if (m2) return `https://drive.google.com/thumbnail?id=${m2[1]}&sz=w300`;
   return url;
 }
+
 const noImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' fill='%23bbb' font-size='10'%3Eບໍ່ມີ%3C/text%3E%3C/svg%3E";
+
 // localStorage settings
 const SETTINGS_KEY = "soudsada_v5";
 function getSettings() {
